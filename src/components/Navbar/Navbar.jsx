@@ -42,12 +42,13 @@ const Navbar = () => {
             <Link to="/" className="flex items-center">
               <motion.div
                 whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
                 className="h-8 w-8 bg-white rounded-full flex items-center justify-center mr-2"
               >
-                <span className="text-indigo-600 font-bold text-xl">A</span>
+                <span className="text-indigo-600 font-bold text-xl">S</span>
               </motion.div>
               <span className="text-white font-bold text-xl hidden sm:inline">
-                AuthApp
+                SafeDesk
               </span>
             </Link>
           </div>
