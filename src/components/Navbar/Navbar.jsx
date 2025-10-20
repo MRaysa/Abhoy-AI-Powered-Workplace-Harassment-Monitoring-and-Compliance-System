@@ -34,7 +34,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+    <nav className="bg-gradient-to-r from-[#F8F8F6] text-[#0B2B37] shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
@@ -43,11 +43,11 @@ const Navbar = () => {
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
-                className="h-8 w-8 bg-white rounded-full flex items-center justify-center mr-2"
+                className="h-8 w-8 bg-[#617C88] rounded-full flex items-center justify-center mr-2"
               >
-                <span className="text-indigo-600 font-bold text-xl">S</span>
+                <span className="text-[#D5E6EE] font-bold text-xl">S</span>
               </motion.div>
-              <span className="text-white font-bold text-xl hidden sm:inline">
+              <span className="text-[#0B2B37] font-bold text-xl hidden sm:inline">
                 SafeDesk
               </span>
             </Link>
@@ -58,7 +58,7 @@ const Navbar = () => {
             <div className="ml-10 flex items-center space-x-4">
               <Link
                 to="/"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300 flex items-center"
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#0B2B37] transition duration-300 flex items-center"
               >
                 <FaHome className="mr-1" /> Home
               </Link>
@@ -67,7 +67,7 @@ const Navbar = () => {
                 <div className="relative ml-3">
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300 focus:outline-none"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-[#0B2B37] hover:text-white transition duration-300 focus:outline-none"
                   >
                     {user.photoURL ? (
                       <img
@@ -77,7 +77,7 @@ const Navbar = () => {
                         onError={handleImageError}
                       />
                     ) : (
-                      <div className="h-8 w-8 rounded-full bg-white text-indigo-600 flex items-center justify-center">
+                      <div className="h-8 w-8 rounded-full bg-white text-[#0B2B37] flex items-center justify-center">
                         <FaUser />
                       </div>
                     )}
@@ -112,7 +112,7 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/signin"
-                    className="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300 flex items-center"
+                    className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#0B2B37] hover:text-white transition duration-300 flex items-center"
                   >
                     <FaSignInAlt className="mr-1" /> Sign In
                   </Link>
@@ -122,7 +122,7 @@ const Navbar = () => {
                   >
                     <Link
                       to="/signup"
-                      className="px-3 py-2 rounded-md text-sm font-medium bg-white text-indigo-600 hover:bg-indigo-100 transition duration-300 flex items-center"
+                      className="px-3 py-2 rounded-md text-sm font-medium bg-white text-[#0B2B37] hover:bg-[#D5E6EE] transition duration-300 flex items-center"
                     >
                       <FaUserPlus className="mr-1" /> Sign Up
                     </Link>
@@ -144,7 +144,7 @@ const Navbar = () => {
                     onError={handleImageError}
                   />
                 ) : (
-                  <div className="h-8 w-8 rounded-full bg-white text-indigo-600 flex items-center justify-center">
+                  <div className="h-8 w-8 rounded-full bg-white text-[#0B2B37] flex items-center justify-center">
                     <FaUser />
                   </div>
                 )}
@@ -155,7 +155,7 @@ const Navbar = () => {
             )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md hover:bg-indigo-700 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md hover:bg-[#0B2B37] focus:outline-none"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
@@ -174,13 +174,13 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           transition={{ duration: 0.2 }}
-          className="md:hidden bg-indigo-700"
+          className="md:hidden bg-[#0B2B37]"
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-600"
+              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-[#0B2B37]"
             >
               Home
             </Link>
@@ -196,7 +196,7 @@ const Navbar = () => {
                       onError={handleImageError}
                     />
                   ) : (
-                    <div className="h-8 w-8 rounded-full bg-white text-indigo-600 flex items-center justify-center mr-2">
+                    <div className="h-8 w-8 rounded-full bg-white text-[#0B2B37] flex items-center justify-center mr-2">
                       <FaUser />
                     </div>
                   )}
@@ -209,7 +209,7 @@ const Navbar = () => {
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-600 text-left"
+                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium hover:bg-[#0B2B37] text-left"
                 >
                   <FaSignOutAlt className="mr-2" /> Sign Out
                 </button>
@@ -219,14 +219,14 @@ const Navbar = () => {
                 <Link
                   to="/signin"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-md text-base font-medium hover:bg-indigo-600"
+                  className="block px-3 py-2 rounded-md text-base font-medium hover:bg-[#0B2B37] hover:text-white"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/signup"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-md text-base font-medium bg-white text-indigo-600 hover:bg-indigo-100"
+                  className="block px-3 py-2 rounded-md text-base font-medium bg-white text-[#0B2B37] hover:bg-[#D5E6EE] hover:text-[#0B2B37]"
                 >
                   Sign Up
                 </Link>
