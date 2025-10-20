@@ -181,7 +181,7 @@ const HomePage = () => {
   ];
 
   const stats = [
-    { value: '10,000+', label: 'Safe Reports Filed' },
+    { value: '10,000+', label: 'Safe Desks Filed' },
     { value: '100%', label: 'Anonymity Guaranteed' },
     { value: '50+', label: 'Legal Experts' },
     { value: '4.8/5', label: 'User Rating' }
@@ -189,7 +189,7 @@ const HomePage = () => {
 
   const testimonials = [
     {
-      quote: 'SafeReport gave me the courage to speak up - anonymously and effectively. I finally felt heard without fear.',
+      quote: 'SafeDesk gave me the courage to speak up - anonymously and effectively. I finally felt heard without fear.',
       author: 'Anonymous User',
       role: 'University Student',
       rating: 5
@@ -201,7 +201,7 @@ const HomePage = () => {
       rating: 5
     },
     {
-      quote: 'Being able to verify my report with evidence made all the difference. SafeReport restored my voice.',
+      quote: 'Being able to verify my report with evidence made all the difference. SafeDesk restored my voice.',
       author: 'Anonymous User',
       role: 'Healthcare Worker',
       rating: 5
@@ -239,7 +239,7 @@ const HomePage = () => {
         <section id="features" className={`py-20 ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose SafeReport?</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose SafeDesk?</h2>
               <p className={`text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Our Core Safeguards for Your Protection</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -363,7 +363,7 @@ const HomePage = () => {
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6">Join Our Mission</h2>
                 <p className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  SafeReport is built to end harassment cycles through technology and empathy. We believe every voice deserves to be heard safely and every survivor deserves support without fear of retaliation.
+                  SafeDesk is built to end harassment cycles through technology and empathy. We believe every voice deserves to be heard safely and every survivor deserves support without fear of retaliation.
                 </p>
                 <p className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Our platform combines cutting-edge security with human-centered design to create a space where reporting harassment is not only safe but empowering. Together, we can build workplaces and campuses free from harassment.
