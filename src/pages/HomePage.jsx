@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Shield, Lock, FileText, Scale, MessageCircle, Users, ChevronRight, Check, Menu, X } from 'lucide-react';
+import { Link } from 'react-router';
 
 const HomePage = () => {
 
@@ -229,8 +230,24 @@ const HomePage = () => {
           <div className="relative z-10 flex items-center justify-center h-full">
             <div className="text-center text-[#0B2B37]">
               <h1 className="text-6xl font-bold mb-4 drop-shadow-lg">Break the Silence Safely - Report Harassment Anonymously</h1>
-              <p className="text-xl opacity-90">Empower yourself and others. Secure, verified, and supported reporting for workplaces and universities.
+              <p className="text-xl opacity-90 mb-8">Empower yourself and others. Secure, verified, and supported reporting for workplaces and universities.
               </p>
+              <div className="flex gap-4 justify-center">
+                <Link
+                  to="/submit-complaint"
+                  className="bg-[#0B2B37] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#0a242f] transition transform hover:scale-105 shadow-lg flex items-center gap-2"
+                >
+                  <FileText className="w-5 h-5" />
+                  Submit Anonymous Report
+                </Link>
+                <Link
+                  to="/forum"
+                  className="bg-white text-[#0B2B37] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-lg flex items-center gap-2 border-2 border-[#0B2B37]"
+                >
+                  <Users className="w-5 h-5" />
+                  View Community Forum
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -243,18 +260,34 @@ const HomePage = () => {
               <p className={`text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Our Core Safeguards for Your Protection</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className={`p-6 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-2xl ${
-                    darkMode ? 'bg-gray-800' : 'bg-gray-50'
-                  }`}
-                >
-                  <div className="text-[#0B2B37] mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>{feature.description}</p>
-                </div>
-              ))}
+              {features.map((feature, index) => {
+                const isForumFeature = feature.title === 'Public Harassment Forum';
+                const isComplaintFeature = feature.title === 'Anonymous Complaint System';
+                
+                const card = (
+                  <div
+                    className={`p-6 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-2xl ${
+                      darkMode ? 'bg-gray-800' : 'bg-gray-50'
+                    } ${(isForumFeature || isComplaintFeature) ? 'cursor-pointer hover:bg-gray-100' : ''}`}
+                  >
+                    <div className="text-[#0B2B37] mb-4">{feature.icon}</div>
+                    <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                    <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>{feature.description}</p>
+                    {(isForumFeature || isComplaintFeature) && (
+                      <div className="mt-4 flex items-center text-[#0B2B37] font-semibold">
+                        Learn More <ChevronRight className="w-4 h-4 ml-1" />
+                      </div>
+                    )}
+                  </div>
+                );
+
+                if (isForumFeature) {
+                  return <Link key={index} to="/forum">{card}</Link>;
+                } else if (isComplaintFeature) {
+                  return <Link key={index} to="/submit-complaint">{card}</Link>;
+                }
+                return <div key={index}>{card}</div>;
+              })}
             </div>
           </div>
         </section>
@@ -293,9 +326,12 @@ const HomePage = () => {
             </div>
             <div className="text-center mt-12">
               <p className="text-xl font-semibold mb-6">Ready to Take the First Step?</p>
-              <button className="bg-[#0B2B37] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#0B2B37] transition transform hover:scale-105 shadow-lg">
+              <Link 
+                to="/submit-complaint"
+                className="inline-block bg-[#0B2B37] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#0B2B37] transition transform hover:scale-105 shadow-lg"
+              >
                 Begin Your Report
-              </button>
+              </Link>
             </div>
           </div>
         </section>

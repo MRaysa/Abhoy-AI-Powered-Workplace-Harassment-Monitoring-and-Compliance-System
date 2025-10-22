@@ -9,11 +9,17 @@ import {
   FaShieldAlt,
   FaMapMarkerAlt,
   FaCog,
+  FaUserSecret,
+  FaSearch,
+  FaComments,
 } from "react-icons/fa";
 
 const EmployeeLayout = () => {
   const menuItems = [
     { path: "/employee/home", label: "Home", icon: <FaHome /> },
+    { path: "/employee/anonymous-complaint", label: "Anonymous Complaint", icon: <FaUserSecret /> },
+    { path: "/employee/track-complaint", label: "Track Complaint", icon: <FaSearch /> },
+    { path: "/employee/forum", label: "Public Forum", icon: <FaComments /> },
     { path: "/employee/report", label: "Report Incident", icon: <FaFileAlt /> },
     { path: "/employee/reports", label: "My Reports", icon: <FaChartLine /> },
     {

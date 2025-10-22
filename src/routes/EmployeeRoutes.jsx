@@ -2,6 +2,9 @@ import React from "react";
 import EmployeeLayout from "../components/layouts/EmployeeLayout";
 import Home from "../pages/Employee/Home";
 import ReportForm from "../pages/Employee/ReportForm";
+import AnonymousComplaint from "../pages/Employee/AnonymousComplaint";
+import TrackComplaint from "../pages/Employee/TrackComplaint";
+import PublicForum from "../pages/Employee/PublicForum";
 import MyReports from "../pages/Employee/MyReports";
 import LegalSupport from "../pages/Employee/LegalSupport";
 import WorkplaceFinder from "../pages/Employee/WorkplaceFinder";
@@ -18,6 +21,18 @@ const employeeRoutes = {
     {
       path: "report",
       element: <ReportForm />,
+    },
+    {
+      path: "anonymous-complaint",
+      element: <AnonymousComplaint />,
+    },
+    {
+      path: "track-complaint",
+      element: <TrackComplaint />,
+    },
+    {
+      path: "forum",
+      element: <PublicForum />,
     },
     {
       path: "reports",

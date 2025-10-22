@@ -6,6 +6,7 @@ import Analytics from "../pages/Admin/Analytics";
 import DepartmentView from "../pages/Admin/DepartmentView";
 import CertificationPanel from "../pages/Admin/CertificationPanel";
 import UserManagement from "../pages/Admin/UserManagement";
+import ComplaintManagement from "../pages/Admin/ComplaintManagement";
 
 const adminRoutes = {
   path: "/admin",
@@ -34,6 +35,10 @@ const adminRoutes = {
     {
       path: "users",
       element: <UserManagement />,
+    },
+    {
+      path: "complaints",
+      element: <ComplaintManagement />,
     },
   ],
 };
