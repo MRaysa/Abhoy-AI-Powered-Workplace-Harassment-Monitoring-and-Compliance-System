@@ -2,14 +2,17 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaShieldAlt, FaFileAlt, FaChartLine, FaUsers, FaUserSecret, FaSearch, FaComments } from "react-icons/fa";
 import { Link } from "react-router";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Home = () => {
+  const { isDark } = useTheme();
+  
   const featuredActions = [
     {
       title: "Anonymous Complaint",
       description: "Report harassment safely without revealing your identity",
       icon: <FaUserSecret className="text-4xl" />,
-      link: "/employee/anonymous-complaint",
+      link: "/submit-complaint",
       color: "from-indigo-600 to-purple-600",
       badge: "NEW",
       featured: true
@@ -18,7 +21,7 @@ const Home = () => {
       title: "Track Complaint",
       description: "Check the status of your complaint using Anonymous ID",
       icon: <FaSearch className="text-4xl" />,
-      link: "/employee/track-complaint",
+      link: "/track-complaint",
       color: "from-blue-500 to-cyan-500",
       badge: "NEW",
       featured: true
@@ -27,7 +30,7 @@ const Home = () => {
       title: "Public Forum",
       description: "View verified complaints and show community support",
       icon: <FaComments className="text-4xl" />,
-      link: "/employee/forum",
+      link: "/forum",
       color: "from-green-500 to-emerald-500",
       badge: "NEW",
       featured: true
@@ -66,7 +69,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className={`min-h-screen ${isDark ? 'bg-[#0f1824] text-white' : 'bg-gradient-to-br from-gray-50 to-gray-100'} p-6 transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <motion.div
@@ -105,7 +108,7 @@ const Home = () => {
                 whileHover={{ y: -8, scale: 1.03 }}
               >
                 <Link to={action.link}>
-                  <div className="bg-white rounded-xl shadow-xl p-6 h-full hover:shadow-2xl transition-all border-2 border-transparent hover:border-indigo-300 relative overflow-hidden">
+                  <div className={`${isDark ? 'bg-[#1a2332] border-[#2d3748]' : 'bg-white'} rounded-xl shadow-xl p-6 h-full hover:shadow-2xl transition-all border-2 ${isDark ? 'hover:border-indigo-500' : 'hover:border-indigo-300'} relative overflow-hidden`}>
                     {action.badge && (
                       <span className="absolute top-3 right-3 px-3 py-1 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full text-xs font-bold shadow-lg">
                         {action.badge}

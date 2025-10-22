@@ -2,17 +2,28 @@ import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import {
   FaUser,
   FaSignOutAlt,
   FaHome,
   FaSignInAlt,
   FaUserPlus,
+  FaClock,
+  FaBolt,
+  FaCog,
+  FaHandsHelping,
+  FaKeyboard,
+  FaBell,
+  FaFileAlt,
+  FaUserSecret,
 } from "react-icons/fa";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
+import { HiDesktopComputer } from "react-icons/hi";
 
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
+  const { theme, setLightTheme, setDarkTheme, setSystemTheme, isDark } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = React.useState(false);
   const navigate = useNavigate();
@@ -34,7 +45,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-[#F8F8F6] text-[#0B2B37] shadow-lg">
+    <nav className={`${isDark ? 'bg-[#1a2332]' : 'bg-gradient-to-r from-[#F8F8F6]'} ${isDark ? 'text-white' : 'text-[#0B2B37]'} shadow-lg transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
@@ -58,7 +69,7 @@ const Navbar = () => {
             <div className="ml-10 flex items-center space-x-4">
               <Link
                 to="/"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#0B2B37] transition duration-300 flex items-center"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-[#0B2B37] hover:text-white'} transition duration-300 flex items-center`}
               >
                 <FaHome className="mr-1" /> Home
               </Link>
@@ -67,7 +78,7 @@ const Navbar = () => {
                 <div className="relative ml-3">
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-[#0B2B37] hover:text-white transition duration-300 focus:outline-none"
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-[#0B2B37] hover:text-white'} transition duration-300 focus:outline-none`}
                   >
                     {user.photoURL ? (
                       <img
@@ -88,23 +99,124 @@ const Navbar = () => {
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                      className={`absolute right-0 mt-2 w-80 ${isDark ? 'bg-[#1a2332] border-[#2d3748]' : 'bg-white border-gray-200'} rounded-xl shadow-2xl py-3 z-50 border`}
                     >
-                      <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                        <p className="font-medium">
-                          {user.displayName || "User"}
-                        </p>
-                        <p className="text-xs text-gray-500 truncate">
-                          {user.email}
-                        </p>
+                      {/* User Info Header */}
+                      <div className={`px-4 py-3 border-b ${isDark ? 'border-[#2d3748]' : 'border-gray-200'}`}>
+                        <div className="flex items-center space-x-3">
+                          {user.photoURL ? (
+                            <img
+                              src={user.photoURL}
+                              alt="Profile"
+                              className="h-12 w-12 rounded-full object-cover border-2 border-[#617C88]"
+                              onError={handleImageError}
+                            />
+                          ) : (
+                            <div className="h-12 w-12 rounded-full bg-[#617C88] text-white flex items-center justify-center">
+                              <FaUser className="text-xl" />
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                              {user.displayName || "User"}
+                            </p>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} truncate`}>
+                              {user.email}
+                            </p>
+                          </div>
+                          <button className={`${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}>
+                            <FaBell />
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        onClick={handleSignOut}
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                      >
-                        <FaSignOutAlt className="mr-2 text-red-500" />
-                        Sign Out
-                      </button>
+
+                      {/* Quick Access */}
+                      <div className="px-3 py-2">
+                        <p className={`text-xs uppercase font-semibold px-2 mb-2 ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>Quick Access</p>
+                        <div className="grid grid-cols-5 gap-2">
+                          <Link to="/employee/home" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                            <FaUser className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Profile</span>
+                          </Link>
+                          <Link to="/employee/reports" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                            <FaClock className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Timeline</span>
+                          </Link>
+                          <Link to="/forum" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                            <FaBolt className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Forum</span>
+                          </Link>
+                          <Link to="/track-complaint" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                            <FaCog className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Track</span>
+                          </Link>
+                          <Link to="/employee/settings" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                            <FaCog className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Settings</span>
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* More Options */}
+                      <div className={`px-3 py-2 border-t ${isDark ? 'border-[#2d3748]' : 'border-gray-200'} mt-2`}>
+                        <p className={`text-xs uppercase font-semibold px-2 mb-2 ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>More Options</p>
+                        <Link to="/employee/reports" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                          <FaFileAlt className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                          <span>My Reports</span>
+                        </Link>
+                        <Link to="/submit-complaint" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                          <FaUserSecret className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                          <span>Submit Complaint</span>
+                        </Link>
+                        <Link to="/employee/legal-support" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                          <FaHandsHelping className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                          <span>Legal Support</span>
+                        </Link>
+                        <Link to="/employee/workplace-finder" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                          <FaKeyboard className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                          <span>Workplace Finder</span>
+                        </Link>
+                      </div>
+
+                      {/* Theme Toggle */}
+                      <div className={`px-3 py-2 border-t ${isDark ? 'border-[#2d3748]' : 'border-gray-200'}`}>
+                        <div className="flex items-center justify-between px-3 py-2">
+                          <div className="flex space-x-2">
+                            <button 
+                              onClick={setLightTheme}
+                              className={`p-2 rounded-lg ${theme === 'light' ? 'bg-indigo-600 text-white' : isDark ? 'bg-[#2d3748] text-gray-400' : 'bg-gray-200 text-gray-600'} hover:text-white transition`}
+                              title="Light Mode"
+                            >
+                              <FiSun />
+                            </button>
+                            <button 
+                              onClick={setDarkTheme}
+                              className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-indigo-600 text-white' : isDark ? 'bg-[#2d3748] text-gray-400' : 'bg-gray-200 text-gray-600'} hover:text-white transition`}
+                              title="Dark Mode"
+                            >
+                              <FiMoon />
+                            </button>
+                            <button 
+                              onClick={setSystemTheme}
+                              className={`p-2 rounded-lg ${isDark ? 'bg-[#2d3748] text-gray-400' : 'bg-gray-200 text-gray-600'} hover:text-white transition`}
+                              title="System Theme"
+                            >
+                              <HiDesktopComputer />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Sign Out */}
+                      <div className={`px-3 py-2 border-t ${isDark ? 'border-[#2d3748]' : 'border-gray-200'}`}>
+                        <button
+                          onClick={handleSignOut}
+                          className={`flex items-center justify-center w-full px-3 py-2 rounded-lg text-sm text-red-400 ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-red-50'} transition font-semibold`}
+                        >
+                          <FaSignOutAlt className="mr-2" />
+                          <span>Log out</span>
+                        </button>
+                      </div>
                     </motion.div>
                   )}
                 </div>
