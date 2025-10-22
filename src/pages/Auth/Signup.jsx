@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
+import { userAPI } from "../../services/api";
 import Swal from "sweetalert2";
 
 const SignUp = () => {
@@ -36,19 +37,32 @@ const SignUp = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
     const phoneRegex = /^[0-9]{10,15}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.includes("@"))
-      newErrors.email = "Valid email is required";
-    if (!passwordRegex.test(formData.password)) {
-      newErrors.password =
-        "Password must be at least 6 characters with uppercase and lowercase";
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = "Name must be at least 2 characters long";
     }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please provide a valid email address";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password = "Password must be at least 6 characters with uppercase, lowercase, and number";
+    }
+
     if (formData.phone && !phoneRegex.test(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number";
+      newErrors.phone = "Please enter a valid phone number (10-15 digits)";
     }
+
     if (formData.photoURL && !isValidUrl(formData.photoURL)) {
       newErrors.photoURL = "Please enter a valid image URL";
     }
@@ -100,16 +114,10 @@ const SignUp = () => {
 
   const saveUserToDatabase = async (userProfile) => {
     try {
-      const response = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userProfile),
-      });
-
-      const data = await response.json();
-      return data;
+      console.log("Saving user to database:", userProfile);
+      const response = await userAPI.create(userProfile);
+      console.log("Database response:", response);
+      return response;
     } catch (error) {
       console.error("Error saving user to database:", error);
       throw error;
@@ -131,12 +139,13 @@ const SignUp = () => {
       // Prepare user profile for database
       const userProfile = {
         uid: user.uid,
-        displayName: formData.name,
+        name: formData.name,
         email: formData.email,
-        photoURL: formData.photoURL || "",
-        phoneNumber: formData.phone || "",
+        password: formData.password, // Will be hashed by backend
+        phone: formData.phone || "",
         address: formData.address || "",
-        createdAt: new Date().toISOString(),
+        photoURL: formData.photoURL || "",
+        role: "employee"
       };
 
       // Update Firebase user profile
@@ -145,22 +154,53 @@ const SignUp = () => {
         photoURL: formData.photoURL || "",
       });
 
-      // Save to MongoDB
-      const dbResponse = await saveUserToDatabase(userProfile);
-
-      if (dbResponse.insertedId) {
+      // Save to MongoDB via backend API
+      try {
+        const dbResponse = await saveUserToDatabase(userProfile);
+        
+        if (dbResponse.success) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your account has been created successfully!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate("/");
+        } else {
+          throw new Error("Failed to save user to database");
+        }
+      } catch (dbError) {
+        console.error("Database save error:", dbError);
+        // If MongoDB save fails, we should delete the Firebase user
+        try {
+          await user.delete();
+        } catch (deleteError) {
+          console.error("Failed to delete Firebase user:", deleteError);
+        }
+        
         Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your account has been created successfully!",
-          showConfirmButton: false,
-          timer: 1500,
+          icon: "error",
+          title: "Account Creation Failed",
+          text: "Failed to create your account. Please try again.",
         });
-        navigate("/");
+        return;
       }
     } catch (error) {
       console.error("Signup error:", error);
-      setErrors({ firebase: error.message });
+      
+      // Handle different types of errors
+      if (error.message.includes("email-already-in-use")) {
+        setErrors({ firebase: "An account with this email already exists" });
+      } else if (error.message.includes("weak-password")) {
+        setErrors({ firebase: "Password is too weak" });
+      } else if (error.message.includes("invalid-email")) {
+        setErrors({ firebase: "Invalid email address" });
+      } else if (error.message && error.message.includes("User with this email already exists")) {
+        setErrors({ firebase: "An account with this email already exists" });
+      } else {
+        setErrors({ firebase: error.message || "An error occurred during signup" });
+      }
     }
   };
 
@@ -172,20 +212,36 @@ const SignUp = () => {
       // Prepare user profile from Google auth
       const userProfile = {
         uid: user.uid,
-        displayName: user.displayName || "",
+        name: user.displayName || "",
         email: user.email || "",
-        photoURL: user.photoURL || "",
-        phoneNumber: "",
+        password: "google-auth", // Special marker for Google auth
+        phone: "",
         address: "",
-        createdAt: new Date().toISOString(),
+        photoURL: user.photoURL || "",
+        role: "employee"
       };
 
-      // Save to MongoDB
-      await saveUserToDatabase(userProfile);
+      // Save to MongoDB via backend API
+      const dbResponse = await saveUserToDatabase(userProfile);
 
-      navigate("/");
+      if (dbResponse.success) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your account has been created successfully!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/");
+      }
     } catch (error) {
-      setErrors({ firebase: error.message });
+      console.error("Google signup error:", error);
+      if (error.message && error.message.includes("User with this email already exists")) {
+        // User already exists, just sign them in
+        navigate("/");
+      } else {
+        setErrors({ firebase: error.message || "An error occurred during Google signup" });
+      }
     }
   };
   return (
@@ -404,7 +460,7 @@ const SignUp = () => {
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             ) : (
               <p className="text-gray-500 text-xs mt-1">
-                Must be at least 6 characters with uppercase and lowercase
+                Must be at least 6 characters with uppercase, lowercase, and number
               </p>
             )}
           </div>

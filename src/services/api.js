@@ -19,15 +19,27 @@ const apiRequest = async (endpoint, options = {}) => {
     },
   };
 
+  console.log("API Request:", { url, config });
+
   try {
     const response = await fetch(url, config);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.error("API Error Response:", errorData);
+      
+      // If there are validation errors, show them
+      if (errorData.errors && Array.isArray(errorData.errors)) {
+        const errorMessages = errorData.errors.map(err => `${err.field}: ${err.message}`).join(', ');
+        throw new Error(`Validation failed: ${errorMessages}`);
+      }
+      
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log("API Success Response:", result);
+    return result;
   } catch (error) {
     console.error("API Request Error:", error);
     throw error;
@@ -79,17 +91,17 @@ export const reportAPI = {
 export const userAPI = {
   // Get all users
   getAll: async () => {
-    return apiRequest("/users");
+    return apiRequest("/api/users");
   },
 
   // Get user by ID
   getById: async (id) => {
-    return apiRequest(`/users/${id}`);
+    return apiRequest(`/api/users/${id}`);
   },
 
   // Create new user
   create: async (userData) => {
-    return apiRequest("/users", {
+    return apiRequest("/api/users", {
       method: "POST",
       body: JSON.stringify(userData),
     });
@@ -97,8 +109,8 @@ export const userAPI = {
 
   // Update user
   update: async (id, userData) => {
-    return apiRequest(`/users/${id}`, {
-      method: "PATCH",
+    return apiRequest(`/api/users/${id}`, {
+      method: "PUT",
       body: JSON.stringify(userData),
     });
   },
