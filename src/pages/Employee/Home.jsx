@@ -69,7 +69,7 @@ const Home = () => {
   ];
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#0f1824] text-white' : 'bg-gradient-to-br from-gray-50 to-gray-100'} p-6 transition-colors duration-300`}>
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`}>
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <motion.div
@@ -95,7 +95,7 @@ const Home = () => {
         {/* Featured: Anonymous Complaint System */}
         <div className="mb-8">
           <div className="flex items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-800">✨ Featured: Anonymous Complaint System</h2>
+            <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>✨ Featured: Anonymous Complaint System</h2>
             <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">NEW</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -108,7 +108,9 @@ const Home = () => {
                 whileHover={{ y: -8, scale: 1.03 }}
               >
                 <Link to={action.link}>
-                  <div className={`${isDark ? 'bg-[#1a2332] border-[#2d3748]' : 'bg-white'} rounded-xl shadow-xl p-6 h-full hover:shadow-2xl transition-all border-2 ${isDark ? 'hover:border-indigo-500' : 'hover:border-indigo-300'} relative overflow-hidden`}>
+                  <div className={`rounded-xl shadow-xl p-6 h-full hover:shadow-2xl transition-all border-2 relative overflow-hidden ${
+                    isDark ? 'bg-gray-800 border-gray-700 hover:border-indigo-500' : 'bg-white border-gray-200 hover:border-indigo-400'
+                  }`}>
                     {action.badge && (
                       <span className="absolute top-3 right-3 px-3 py-1 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full text-xs font-bold shadow-lg">
                         {action.badge}
@@ -119,10 +121,10 @@ const Home = () => {
                     >
                       {action.icon}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                       {action.title}
                     </h3>
-                    <p className="text-gray-600 text-sm">{action.description}</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{action.description}</p>
                     <div className="mt-4 flex items-center text-indigo-600 font-semibold text-sm">
                       <span>Learn More</span>
                       <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +140,7 @@ const Home = () => {
 
         {/* Quick Actions Grid */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+          <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {quickActions.map((action, index) => (
               <motion.div
@@ -149,16 +151,18 @@ const Home = () => {
                 whileHover={{ y: -5, scale: 1.02 }}
               >
                 <Link to={action.link}>
-                  <div className="bg-white rounded-xl shadow-lg p-6 h-full hover:shadow-xl transition-shadow">
+                  <div className={`rounded-xl shadow-lg p-6 h-full hover:shadow-xl transition-shadow ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                  }`}>
                     <div
                       className={`bg-gradient-to-r ${action.color} w-16 h-16 rounded-lg flex items-center justify-center text-white mb-4`}
                     >
                       {action.icon}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                       {action.title}
                     </h3>
-                    <p className="text-gray-600 text-sm">{action.description}</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{action.description}</p>
                   </div>
                 </Link>
               </motion.div>
@@ -171,13 +175,15 @@ const Home = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-indigo-500 rounded-lg p-6 mb-8"
+          className={`border-l-4 border-indigo-500 rounded-lg p-6 mb-8 ${
+            isDark ? 'bg-gray-800' : 'bg-gradient-to-r from-blue-50 to-indigo-50'
+          }`}
         >
           <div className="flex items-start">
             <FaShieldAlt className="text-2xl text-indigo-600 mr-4 mt-1" />
             <div>
-              <h3 className="font-bold text-gray-800 text-lg mb-2">How Anonymous Complaints Work</h3>
-              <ul className="space-y-2 text-gray-700">
+              <h3 className={`font-bold text-lg mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>How Anonymous Complaints Work</h3>
+              <ul className={`space-y-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <li className="flex items-start">
                   <span className="text-indigo-600 mr-2">•</span>
                   <span>Submit complaints without revealing your identity - You receive a unique Anonymous ID</span>
@@ -204,9 +210,9 @@ const Home = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="bg-white rounded-xl shadow-lg p-6"
+          className={`rounded-xl shadow-lg p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             Your Activity Dashboard
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
