@@ -65,7 +65,7 @@ const Navbar = () => {
               >
                 <span className="text-[#D5E6EE] font-bold text-xl">S</span>
               </motion.div>
-              <span className="text-[#0B2B37] font-bold text-xl hidden sm:inline">
+              <span className={`font-bold text-xl hidden sm:inline ${isDark ? 'text-white' : 'text-[#0B2B37]'}`}>
                 SafeDesk
               </span>
             </Link>
