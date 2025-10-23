@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaFileAlt, FaPaperPlane } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const ReportForm = () => {
+  const { isDark } = useTheme();
   const [formData, setFormData] = useState({
     incidentType: "",
     date: "",
@@ -68,22 +70,22 @@ const ReportForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-lg p-8"
+          className={`rounded-xl shadow-lg p-8 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
           {/* Header */}
           <div className="flex items-center mb-6">
             <FaFileAlt className="text-3xl text-indigo-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-800">
+            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
               Report an Incident
             </h1>
           </div>
 
-          <p className="text-gray-600 mb-6">
+          <p className={`mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             Your safety matters. Please provide as much detail as possible to
             help us address your concern effectively.
           </p>
@@ -92,7 +94,7 @@ const ReportForm = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Incident Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Incident Type *
               </label>
               <select
@@ -100,7 +102,9 @@ const ReportForm = () => {
                 value={formData.incidentType}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                }`}
               >
                 <option value="">Select incident type</option>
                 {incidentTypes.map((type) => (
@@ -113,7 +117,7 @@ const ReportForm = () => {
 
             {/* Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Date of Incident *
               </label>
               <input
@@ -122,13 +126,15 @@ const ReportForm = () => {
                 value={formData.date}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                }`}
               />
             </div>
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Location
               </label>
               <input
@@ -137,13 +143,15 @@ const ReportForm = () => {
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="e.g., Office Floor 3, Meeting Room A"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Description *
               </label>
               <textarea
@@ -153,13 +161,15 @@ const ReportForm = () => {
                 required
                 rows="6"
                 placeholder="Please describe what happened in detail..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
 
             {/* Witnesses */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Witnesses (if any)
               </label>
               <input
@@ -168,7 +178,9 @@ const ReportForm = () => {
                 value={formData.witnesses}
                 onChange={handleChange}
                 placeholder="Names of any witnesses"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
 
@@ -184,7 +196,7 @@ const ReportForm = () => {
               />
               <label
                 htmlFor="anonymous"
-                className="ml-2 block text-sm text-gray-700"
+                className={`ml-2 block text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
               >
                 Submit anonymously
               </label>

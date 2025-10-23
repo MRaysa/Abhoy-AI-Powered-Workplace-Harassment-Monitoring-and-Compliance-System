@@ -1,8 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaShieldAlt, FaBook, FaPhone, FaEnvelope } from "react-icons/fa";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const LegalSupport = () => {
+  const { isDark } = useTheme();
   const resources = [
     {
       title: "Know Your Rights",
@@ -26,7 +28,7 @@ const LegalSupport = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,7 +37,7 @@ const LegalSupport = () => {
           {/* Header */}
           <div className="flex items-center mb-6">
             <FaShieldAlt className="text-3xl text-indigo-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-800">Legal Support</h1>
+            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Legal Support</h1>
           </div>
 
           {/* Resources Grid */}
@@ -47,17 +49,19 @@ const LegalSupport = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-shadow"
+                className={`rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-shadow ${
+                  isDark ? 'bg-gray-800' : 'bg-white'
+                }`}
               >
                 <div
                   className={`bg-gradient-to-r ${resource.color} w-16 h-16 rounded-lg flex items-center justify-center text-white mb-4`}
                 >
                   {resource.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                   {resource.title}
                 </h3>
-                <p className="text-gray-600">{resource.description}</p>
+                <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>{resource.description}</p>
               </motion.div>
             ))}
           </div>

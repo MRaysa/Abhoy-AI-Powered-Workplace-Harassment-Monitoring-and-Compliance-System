@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 import { FaCog, FaBell, FaLock, FaUser } from "react-icons/fa";
 import { AuthContext } from "../../contexts/AuthContext";
 import Swal from "sweetalert2";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Settings = () => {
   const { user } = useContext(AuthContext);
+  const { isDark } = useTheme();
   const [notifications, setNotifications] = useState({
     email: true,
     push: false,
@@ -39,7 +41,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -48,55 +50,59 @@ const Settings = () => {
           {/* Header */}
           <div className="flex items-center mb-6">
             <FaCog className="text-3xl text-indigo-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-800">Settings</h1>
+            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Settings</h1>
           </div>
 
           {/* Profile Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className={`rounded-xl shadow-lg p-6 mb-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center mb-4">
               <FaUser className="text-2xl text-indigo-600 mr-3" />
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                 Profile Information
               </h2>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Display Name
                 </label>
                 <input
                   type="text"
                   defaultValue={user?.displayName || ""}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Email
                 </label>
                 <input
                   type="email"
                   defaultValue={user?.email || ""}
                   disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                  className={`w-full px-4 py-2 border rounded-lg ${
+                    isDark ? 'bg-gray-700/50 border-gray-600 text-gray-400' : 'bg-gray-100 border-gray-300'
+                  }`}
                 />
               </div>
             </div>
           </div>
 
           {/* Notifications Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className={`rounded-xl shadow-lg p-6 mb-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center mb-4">
               <FaBell className="text-2xl text-indigo-600 mr-3" />
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                 Notification Preferences
               </h2>
             </div>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-800">Email Notifications</p>
-                  <p className="text-sm text-gray-600">
+                  <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>Email Notifications</p>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     Receive updates via email
                   </p>
                 </div>
@@ -113,8 +119,8 @@ const Settings = () => {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-800">Push Notifications</p>
-                  <p className="text-sm text-gray-600">
+                  <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>Push Notifications</p>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     Receive browser notifications
                   </p>
                 </div>
@@ -131,8 +137,8 @@ const Settings = () => {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-800">Report Updates</p>
-                  <p className="text-sm text-gray-600">
+                  <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>Report Updates</p>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     Get notified about report status changes
                   </p>
                 </div>
@@ -150,25 +156,29 @@ const Settings = () => {
           </div>
 
           {/* Privacy Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className={`rounded-xl shadow-lg p-6 mb-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center mb-4">
               <FaLock className="text-2xl text-indigo-600 mr-3" />
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                 Privacy & Security
               </h2>
             </div>
             <div className="space-y-4">
-              <button className="w-full text-left px-4 py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                <p className="font-medium text-gray-800">Change Password</p>
-                <p className="text-sm text-gray-600">
+              <button className={`w-full text-left px-4 py-3 rounded-lg transition ${
+                isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'
+              }`}>
+                <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>Change Password</p>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   Update your account password
                 </p>
               </button>
-              <button className="w-full text-left px-4 py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                <p className="font-medium text-gray-800">
+              <button className={`w-full text-left px-4 py-3 rounded-lg transition ${
+                isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'
+              }`}>
+                <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>
                   Two-Factor Authentication
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   Add an extra layer of security
                 </p>
               </button>

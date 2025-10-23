@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaFileAlt, FaEye, FaClock, FaCheckCircle } from "react-icons/fa";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const MyReports = () => {
+  const { isDark } = useTheme();
   // Sample data - replace with actual API call
   const [reports] = useState([
     {
@@ -46,7 +48,7 @@ const MyReports = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -55,15 +57,15 @@ const MyReports = () => {
           {/* Header */}
           <div className="flex items-center mb-6">
             <FaFileAlt className="text-3xl text-indigo-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-800">My Reports</h1>
+            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>My Reports</h1>
           </div>
 
           {/* Reports List */}
           <div className="space-y-4">
             {reports.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-                <FaFileAlt className="text-6xl text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600 text-lg">
+              <div className={`rounded-xl shadow-lg p-8 text-center ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                <FaFileAlt className={`text-6xl mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   You haven't submitted any reports yet.
                 </p>
               </div>
@@ -74,12 +76,12 @@ const MyReports = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                  className={`rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow ${isDark ? 'bg-gray-800' : 'bg-white'}`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center mb-2">
-                        <h3 className="text-xl font-bold text-gray-800 mr-3">
+                        <h3 className={`text-xl font-bold mr-3 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                           {report.type}
                         </h3>
                         <span
@@ -91,8 +93,8 @@ const MyReports = () => {
                           <span className="ml-2">{report.status}</span>
                         </span>
                       </div>
-                      <p className="text-gray-600 mb-2">{report.description}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className={`mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{report.description}</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                         Submitted on:{" "}
                         {new Date(report.date).toLocaleDateString()}
                       </p>

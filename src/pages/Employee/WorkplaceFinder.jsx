@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaSearch, FaStar } from "react-icons/fa";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const WorkplaceFinder = () => {
+  const { isDark } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [workplaces] = useState([
     {
@@ -40,7 +42,7 @@ const WorkplaceFinder = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,7 +51,7 @@ const WorkplaceFinder = () => {
           {/* Header */}
           <div className="flex items-center mb-6">
             <FaMapMarkerAlt className="text-3xl text-indigo-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-800">
+            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
               Safe Workplace Finder
             </h1>
           </div>
@@ -62,9 +64,11 @@ const WorkplaceFinder = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by company name or location..."
-                className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 pl-12 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
-              <FaSearch className="absolute left-4 top-4 text-gray-400" />
+              <FaSearch className={`absolute left-4 top-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
             </div>
           </div>
 
@@ -76,18 +80,20 @@ const WorkplaceFinder = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                className={`rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow ${
+                  isDark ? 'bg-gray-800' : 'bg-white'
+                }`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                    <h3 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                       {workplace.name}
                     </h3>
-                    <p className="text-gray-600 mb-2 flex items-center">
+                    <p className={`mb-2 flex items-center ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       <FaMapMarkerAlt className="mr-2 text-indigo-600" />
                       {workplace.location}
                     </p>
-                    <p className="text-gray-600 mb-4">{workplace.description}</p>
+                    <p className={`mb-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{workplace.description}</p>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center">
                         <FaStar className="text-yellow-500 mr-1" />
