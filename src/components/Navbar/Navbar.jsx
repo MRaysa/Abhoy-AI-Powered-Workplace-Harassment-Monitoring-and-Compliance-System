@@ -17,6 +17,13 @@ import {
   FaBell,
   FaFileAlt,
   FaUserSecret,
+  FaChartLine,
+  FaClipboardList,
+  FaUsers,
+  FaBuilding,
+  FaCertificate,
+  FaTachometerAlt,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
 import { HiDesktopComputer } from "react-icons/hi";
@@ -117,9 +124,18 @@ const Navbar = () => {
                             </div>
                           )}
                           <div className="flex-1">
-                            <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                              {user.displayName || "User"}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                                {user.displayName || "User"}
+                              </p>
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                                user.role === 'admin' 
+                                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' 
+                                  : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                              }`}>
+                                {user.role === 'admin' ? 'ADMIN' : 'EMPLOYEE'}
+                              </span>
+                            </div>
                             <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} truncate`}>
                               {user.email}
                             </p>
@@ -130,52 +146,102 @@ const Navbar = () => {
                         </div>
                       </div>
 
-                      {/* Quick Access */}
+                      {/* Quick Access - Role Based */}
                       <div className="px-3 py-2">
                         <p className={`text-xs uppercase font-semibold px-2 mb-2 ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>Quick Access</p>
-                        <div className="grid grid-cols-5 gap-2">
-                          <Link to="/employee/home" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
-                            <FaUser className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Profile</span>
-                          </Link>
-                          <Link to="/employee/reports" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
-                            <FaClock className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Timeline</span>
-                          </Link>
-                          <Link to="/forum" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
-                            <FaBolt className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Forum</span>
-                          </Link>
-                          <Link to="/track-complaint" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
-                            <FaCog className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Track</span>
-                          </Link>
-                          <Link to="/employee/settings" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
-                            <FaCog className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Settings</span>
-                          </Link>
-                        </div>
+                        
+                        {user.role === 'admin' ? (
+                          // Admin Quick Access
+                          <div className="grid grid-cols-5 gap-2">
+                            <Link to="/admin/enhanced-dashboard" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaTachometerAlt className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Dashboard</span>
+                            </Link>
+                            <Link to="/admin/reports" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaClipboardList className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Reports</span>
+                            </Link>
+                            <Link to="/admin/complaints" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaExclamationTriangle className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Complaints</span>
+                            </Link>
+                            <Link to="/admin/analytics" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaChartLine className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Analytics</span>
+                            </Link>
+                            <Link to="/admin/users" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaUsers className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Users</span>
+                            </Link>
+                          </div>
+                        ) : (
+                          // Employee Quick Access
+                          <div className="grid grid-cols-5 gap-2">
+                            <Link to="/employee/home" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaUser className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Profile</span>
+                            </Link>
+                            <Link to="/employee/reports" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaClock className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>My Reports</span>
+                            </Link>
+                            <Link to="/employee/forum" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaBolt className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Forum</span>
+                            </Link>
+                            <Link to="/employee/track-complaint" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaBell className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Track</span>
+                            </Link>
+                            <Link to="/employee/settings" className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-gray-100'} transition`}>
+                              <FaCog className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-lg mb-1`} />
+                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Settings</span>
+                            </Link>
+                          </div>
+                        )}
                       </div>
 
-                      {/* More Options */}
+                      {/* More Options - Role Based */}
                       <div className={`px-3 py-2 border-t ${isDark ? 'border-[#2d3748]' : 'border-gray-200'} mt-2`}>
                         <p className={`text-xs uppercase font-semibold px-2 mb-2 ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>More Options</p>
-                        <Link to="/employee/reports" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
-                          <FaFileAlt className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
-                          <span>My Reports</span>
-                        </Link>
-                        <Link to="/submit-complaint" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
-                          <FaUserSecret className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
-                          <span>Submit Complaint</span>
-                        </Link>
-                        <Link to="/employee/legal-support" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
-                          <FaHandsHelping className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
-                          <span>Legal Support</span>
-                        </Link>
-                        <Link to="/employee/workplace-finder" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
-                          <FaKeyboard className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
-                          <span>Workplace Finder</span>
-                        </Link>
+                        
+                        {user.role === 'admin' ? (
+                          // Admin More Options
+                          <>
+                            <Link to="/admin/departments" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaBuilding className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Departments</span>
+                            </Link>
+                            <Link to="/admin/certifications" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaCertificate className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Certifications</span>
+                            </Link>
+                            <Link to="/admin/dashboard" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaTachometerAlt className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Classic Dashboard</span>
+                            </Link>
+                          </>
+                        ) : (
+                          // Employee More Options
+                          <>
+                            <Link to="/employee/report" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaFileAlt className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Report Incident</span>
+                            </Link>
+                            <Link to="/employee/anonymous-complaint" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaUserSecret className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Anonymous Complaint</span>
+                            </Link>
+                            <Link to="/employee/legal-support" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaHandsHelping className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Legal Support</span>
+                            </Link>
+                            <Link to="/employee/workplace-finder" className={`flex items-center w-full px-3 py-2 rounded-lg text-sm ${isDark ? 'text-gray-300 hover:bg-[#2d3748]' : 'text-gray-700 hover:bg-gray-100'} transition`}>
+                              <FaKeyboard className={`mr-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                              <span>Workplace Finder</span>
+                            </Link>
+                          </>
+                        )}
                       </div>
 
                       {/* Theme Toggle */}
