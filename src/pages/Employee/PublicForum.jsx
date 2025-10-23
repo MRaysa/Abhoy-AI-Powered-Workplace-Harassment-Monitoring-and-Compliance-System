@@ -11,11 +11,17 @@ import {
   TrendingUp,
   Send,
   Filter,
-  Search
+  Search,
+  ThumbsUp,
+  Share2,
+  MoreHorizontal,
+  FileText
 } from "lucide-react";
 import Swal from "sweetalert2";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const PublicForum = () => {
+  const { isDark } = useTheme();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -174,274 +180,266 @@ const PublicForum = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
+    <div className={`min-h-screen ${isDark ? 'bg-[#18191a]' : 'bg-gray-100'} py-6 px-4 transition-colors duration-300`}>
+      <div className="max-w-2xl mx-auto">
+        {/* Header - Similar to Facebook */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className={`${isDark ? 'bg-[#242526]' : 'bg-white'} rounded-lg shadow p-6 mb-4`}
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full mb-4">
-            <TrendingUp className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Public Awareness Forum
+          <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-1`}>
+            Community Stories
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Read verified harassment complaints and show your support. Together we build safer workplaces.
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+            Verified harassment complaints shared by the community
           </p>
         </motion.div>
 
-        {/* Filters and Search */}
+        {/* Search Bar - Facebook Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-lg p-6 mb-8"
+          className={`${isDark ? 'bg-[#242526]' : 'bg-white'} rounded-lg shadow p-4 mb-4`}
         >
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search posts..."
-                className="w-full pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-
-            {/* Filter */}
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="pl-10 pr-8 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none bg-white"
-              >
-                <option value="all">All Posts</option>
-                <option value="recent">Most Recent</option>
-                <option value="popular">Most Supported</option>
-                <option value="verified">Verified Only</option>
-              </select>
-            </div>
+          <div className="relative">
+            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search stories..."
+              className={`w-full pl-10 pr-4 py-2 ${isDark ? 'bg-[#3a3b3c] text-white placeholder-gray-500' : 'bg-gray-100 text-gray-900 placeholder-gray-500'} rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+            />
           </div>
         </motion.div>
 
-        {/* Stats Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
-        >
-          <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Total Posts</p>
-                <p className="text-3xl font-bold text-gray-800">{posts.length}</p>
-              </div>
-              <MessageSquare className="w-10 h-10 text-indigo-500" />
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Community Support</p>
-                <p className="text-3xl font-bold text-gray-800">
-                  {posts.reduce((acc, post) => acc + post.forumReactions.support, 0)}
-                </p>
-              </div>
-              <Heart className="w-10 h-10 text-red-500" />
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">People Affected</p>
-                <p className="text-3xl font-bold text-gray-800">
-                  {posts.reduce((acc, post) => acc + post.forumReactions.similar, 0)}
-                </p>
-              </div>
-              <Users className="w-10 h-10 text-blue-500" />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Posts */}
+        {/* Posts - Facebook Style */}
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4">Loading posts...</p>
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mt-4`}>Loading stories...</p>
           </div>
         ) : posts.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+          <div className={`${isDark ? 'bg-[#242526]' : 'bg-white'} rounded-lg shadow p-12 text-center`}>
             <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">No Posts Yet</h3>
-            <p className="text-gray-600">Be the first to share your story and help others.</p>
+            <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>No Stories Yet</h3>
+            <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Check back later for community stories.</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {posts.map((post, index) => (
               <motion.div
                 key={post._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                className={`${isDark ? 'bg-[#242526]' : 'bg-white'} rounded-lg shadow hover:shadow-md transition-shadow`}
               >
-                {/* Post Header */}
-                <div className="p-6 border-b">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">
-                        {post.title}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                        <span className="flex items-center">
-                          <Shield className="w-4 h-4 mr-1" />
-                          {post.anonymousId}
-                        </span>
-                        <span className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {formatDate(post.createdAt)}
-                        </span>
-                        {post.location && (
-                          <span className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-1" />
-                            {post.location}
+                {/* Post Header - Like Facebook */}
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      {/* Anonymous Avatar */}
+                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                        <Shield className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Anonymous Report
+                          </h3>
+                          {post.verificationStatus === 'verified' && (
+                            <span className="bg-blue-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
+                              ✓ Verified
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                            {formatDate(post.createdAt)}
                           </span>
-                        )}
+                          <span className={isDark ? 'text-gray-500' : 'text-gray-400'}>•</span>
+                          <span className={`${isDark ? 'text-gray-400' : 'text-gray-600'} font-mono text-xs`}>
+                            {post.anonymousId}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        post.priority === 'critical' ? 'bg-red-100 text-red-700' :
-                        post.priority === 'high' ? 'bg-orange-100 text-orange-700' :
-                        post.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-blue-100 text-blue-700'
-                      }`}>
-                        {post.priority.toUpperCase()}
-                      </span>
-                      {post.verificationStatus === 'verified' && (
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          VERIFIED
-                        </span>
-                      )}
-                    </div>
+                    <button className={`${isDark ? 'text-gray-400 hover:bg-[#3a3b3c]' : 'text-gray-600 hover:bg-gray-100'} p-2 rounded-full transition`}>
+                      <MoreHorizontal className="w-5 h-5" />
+                    </button>
                   </div>
 
-                  <div className="mb-4">
-                    <span className="inline-block bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {/* Post Category & Priority */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-medium">
                       {post.incidentType?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      post.priority === 'critical' ? 'bg-red-100 text-red-700' :
+                      post.priority === 'high' ? 'bg-orange-100 text-orange-700' :
+                      post.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-blue-100 text-blue-700'
+                    }`}>
+                      {post.priority.toUpperCase()} PRIORITY
                     </span>
                   </div>
 
-                  {/* Description */}
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-700 whitespace-pre-line">
-                      {post.description.length > 300
-                        ? `${post.description.substring(0, 300)}...`
-                        : post.description}
-                    </p>
+                  {/* Post Title */}
+                  <h2 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
+                    {post.title}
+                  </h2>
+
+                  {/* Post Content */}
+                  <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-3 whitespace-pre-line`}>
+                    {post.description.length > 400
+                      ? `${post.description.substring(0, 400)}... `
+                      : post.description}
+                    {post.description.length > 400 && (
+                      <button className="text-indigo-600 font-medium">See more</button>
+                    )}
+                  </p>
+
+                  {/* Evidence Indicator */}
+                  {(post.evidenceFiles?.length > 0 || post.evidenceUrls?.length > 0) && (
+                    <div className={`${isDark ? 'bg-[#3a3b3c] border-[#4e4f50]' : 'bg-gray-50 border-gray-200'} border rounded-lg p-3 mb-3`}>
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-indigo-600" />
+                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                          📎 {(post.evidenceFiles?.length || 0) + (post.evidenceUrls?.length || 0)} evidence file(s) attached
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Location */}
+                  {post.location && (
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                      <MapPin className="w-4 h-4" />
+                      <span>{post.location}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Reactions Summary - Like Facebook */}
+                <div className={`px-4 py-2 border-t border-b ${isDark ? 'border-[#3a3b3c]' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-1">
+                      <div className="flex -space-x-1">
+                        <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-white">
+                          <Heart className="w-3 h-3 text-white fill-white" />
+                        </div>
+                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center border-2 border-white">
+                          <AlertCircle className="w-3 h-3 text-white" />
+                        </div>
+                        <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">
+                          <Users className="w-3 h-3 text-white" />
+                        </div>
+                      </div>
+                      <span className={`${isDark ? 'text-gray-400' : 'text-gray-600'} ml-2`}>
+                        {(post.forumReactions.support || 0) + (post.forumReactions.concern || 0) + (post.forumReactions.similar || 0)} reactions
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => toggleComments(post._id)}
+                      className={`${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
+                    >
+                      {post.forumComments?.length || 0} comments
+                    </button>
                   </div>
                 </div>
 
-                {/* Reactions */}
-                <div className="px-6 py-4 bg-gray-50 border-b">
-                  <div className="flex flex-wrap gap-3">
-                    {reactionButtons.map((reaction) => (
-                      <motion.button
-                        key={reaction.type}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleReaction(post.anonymousId, reaction.type)}
-                        className={`flex items-center gap-2 px-4 py-2 ${reaction.bg} ${reaction.hoverBg} rounded-lg transition-colors`}
-                      >
-                        <reaction.icon className={`w-5 h-5 ${reaction.color}`} />
-                        <span className="font-medium text-gray-700">{reaction.label}</span>
-                        <span className={`${reaction.color} font-bold`}>
-                          {post.forumReactions[reaction.type] || 0}
-                        </span>
-                      </motion.button>
-                    ))}
+                {/* Action Buttons - Like Facebook */}
+                <div className={`px-4 py-2 border-b ${isDark ? 'border-[#3a3b3c]' : 'border-gray-200'}`}>
+                  <div className="grid grid-cols-3 gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleReaction(post.anonymousId, 'support')}
+                      className={`flex items-center justify-center gap-2 py-2 rounded-lg ${isDark ? 'hover:bg-[#3a3b3c] text-gray-400 hover:text-red-500' : 'hover:bg-gray-100 text-gray-600 hover:text-red-600'} transition font-medium`}
+                    >
+                      <Heart className="w-5 h-5" />
+                      <span>Support</span>
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleReaction(post.anonymousId, 'concern')}
+                      className={`flex items-center justify-center gap-2 py-2 rounded-lg ${isDark ? 'hover:bg-[#3a3b3c] text-gray-400 hover:text-orange-500' : 'hover:bg-gray-100 text-gray-600 hover:text-orange-600'} transition font-medium`}
+                    >
+                      <AlertCircle className="w-5 h-5" />
+                      <span>Concern</span>
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleComment(post.anonymousId)}
+                      className={`flex items-center justify-center gap-2 py-2 rounded-lg ${isDark ? 'hover:bg-[#3a3b3c] text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'} transition font-medium`}
+                    >
+                      <MessageSquare className="w-5 h-5" />
+                      <span>Comment</span>
+                    </motion.button>
                   </div>
                 </div>
 
                 {/* Comments Section */}
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <button
-                      onClick={() => toggleComments(post._id)}
-                      className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors"
-                    >
-                      <MessageSquare className="w-5 h-5 mr-2" />
-                      <span className="font-medium">
-                        {post.forumComments?.length || 0} Comments
-                      </span>
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleComment(post.anonymousId)}
-                      className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                    >
-                      <Send className="w-4 h-4" />
-                      Add Comment
-                    </motion.button>
-                  </div>
-
-                  {/* Comments List */}
-                  {showComments[post._id] && post.forumComments && post.forumComments.length > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="space-y-3 mt-4"
-                    >
-                      {post.forumComments.map((comment) => (
-                        <div key={comment.commentId} className="bg-gray-50 p-4 rounded-lg">
-                          <div className="flex items-center mb-2">
-                            <Shield className="w-4 h-4 text-gray-400 mr-2" />
-                            <span className="text-sm text-gray-600">
+                {showComments[post._id] && post.forumComments && post.forumComments.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="px-4 py-3 space-y-3"
+                  >
+                    {post.forumComments.map((comment) => (
+                      <div key={comment.commentId} className="flex gap-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Shield className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className={`${isDark ? 'bg-[#3a3b3c]' : 'bg-gray-100'} rounded-2xl px-4 py-2`}>
+                            <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
                               {comment.isAnonymous ? "Anonymous" : "Community Member"}
-                            </span>
-                            <span className="text-sm text-gray-400 ml-auto">
+                            </p>
+                            <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                              {comment.comment}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-3 mt-1 px-4">
+                            <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
                               {formatDate(comment.createdAt)}
                             </span>
                           </div>
-                          <p className="text-gray-700">{comment.comment}</p>
                         </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </div>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
               </motion.div>
             ))}
           </div>
         )}
 
-        {/* Pagination */}
+        {/* Pagination - Facebook Style */}
         {totalPages > 1 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex justify-center gap-2 mt-8"
+            className="flex justify-center gap-2 mt-4"
           >
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-white rounded-lg shadow hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`px-4 py-2 ${isDark ? 'bg-[#242526] text-white hover:bg-[#3a3b3c]' : 'bg-white text-gray-900 hover:bg-gray-50'} rounded-lg shadow disabled:opacity-50 disabled:cursor-not-allowed transition`}
             >
               Previous
             </button>
-            <span className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold">
-              Page {page} of {totalPages}
+            <span className={`px-4 py-2 ${isDark ? 'bg-indigo-600' : 'bg-indigo-600'} text-white rounded-lg font-semibold`}>
+              {page} / {totalPages}
             </span>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 bg-white rounded-lg shadow hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`px-4 py-2 ${isDark ? 'bg-[#242526] text-white hover:bg-[#3a3b3c]' : 'bg-white text-gray-900 hover:bg-gray-50'} rounded-lg shadow disabled:opacity-50 disabled:cursor-not-allowed transition`}
             >
               Next
             </button>
