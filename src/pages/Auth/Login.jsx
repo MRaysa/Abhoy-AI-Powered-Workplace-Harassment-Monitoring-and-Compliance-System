@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
@@ -10,12 +10,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import { useNavigate, useLocation, Link } from "react-router";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth } from "../../firebase/firebase.init";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -28,60 +23,17 @@ const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const emailRef = useRef();
-  const googleProvider = new GoogleAuthProvider();
+  
+  const { signInUser, googleSignIn } = useContext(AuthContext);
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   setLoading(true);
-
-  //   try {
-  //     await signInWithEmailAndPassword(auth, email, password);
-  //     navigate(location?.state?.from || "/");
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     await signInWithPopup(auth, googleProvider);
-  //     navigate("/");
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInUser(email, password);
       const user = result.user;
-
-      // Prepare sign-in info
-      const signInInfo = {
-        uid: user.uid, // Preferred identifier
-        email: user.email, // Fallback
-        lastSignInTime: user.metadata.lastSignInTime,
-      };
-
-      // Update last sign-in time in database
-      const updateResponse = await fetch("http://localhost:3000/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signInInfo),
-      });
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        throw new Error(errorData.error || "Failed to update sign-in time");
-      }
 
       // Show success message
       await Swal.fire({
@@ -92,19 +44,26 @@ const SignIn = () => {
         timer: 1500,
       });
 
-      // Navigate to intended page or home
-      navigate(location?.state?.from || "/");
+      // Redirect based on role
+      const redirectPath = user.role === 'admin' 
+        ? '/admin/dashboard' 
+        : location?.state?.from || '/employee/home';
+      
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Sign-in error:", error);
-      setError(error.message);
-
+      
       // Show error message based on error type
       let errorMessage = error.message;
-      if (error.code === "auth/wrong-password") {
-        errorMessage = "Incorrect password";
+      if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+        errorMessage = "Incorrect email or password";
       } else if (error.code === "auth/user-not-found") {
-        errorMessage = "User not found";
+        errorMessage = "User not found. Please check your email or sign up.";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Too many failed attempts. Please try again later.";
       }
+
+      setError(errorMessage);
 
       await Swal.fire({
         icon: "error",
@@ -117,28 +76,11 @@ const SignIn = () => {
   };
 
   const handleGoogleLogin = async () => {
+    setError("");
+    
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await googleSignIn();
       const user = result.user;
-
-      // Update database for Google sign-in
-      const updateResponse = await fetch("http://localhost:3000/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: user.uid,
-          email: user.email,
-          lastSignInTime: user.metadata.lastSignInTime,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        }),
-      });
-
-      if (!updateResponse.ok) {
-        throw new Error("Failed to update Google sign-in info");
-      }
 
       await Swal.fire({
         position: "top-end",
@@ -148,15 +90,22 @@ const SignIn = () => {
         timer: 1500,
       });
 
-      navigate("/");
+      // Redirect based on role
+      const redirectPath = user.role === 'admin' 
+        ? '/admin/dashboard' 
+        : location?.state?.from || '/employee/home';
+      
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Google sign-in error:", error);
-      setError(error.message);
+      
+      const errorMessage = error.message || "Failed to sign in with Google. Please try again.";
+      setError(errorMessage);
 
       await Swal.fire({
         icon: "error",
         title: "Google Sign-in Failed",
-        text: error.message,
+        text: errorMessage,
       });
     }
   };

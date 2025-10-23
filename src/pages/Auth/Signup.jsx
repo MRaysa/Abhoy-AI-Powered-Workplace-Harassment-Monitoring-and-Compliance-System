@@ -129,78 +129,56 @@ const SignUp = () => {
     if (!validateForm()) return;
 
     try {
-      // Create user with email and password
+      // Create user with email, password, and displayName
       const userCredential = await createUser(
         formData.email,
-        formData.password
+        formData.password,
+        formData.name
       );
-      const user = userCredential.user;
 
-      // Prepare user profile for database
-      const userProfile = {
-        uid: user.uid,
-        name: formData.name,
-        email: formData.email,
-        password: formData.password, // Will be hashed by backend
-        phone: formData.phone || "",
-        address: formData.address || "",
-        photoURL: formData.photoURL || "",
-        role: "employee"
-      };
+      // Update Firebase user profile with photo if provided
+      if (formData.photoURL) {
+        await updateUser({
+          photoURL: formData.photoURL,
+        });
+      }
 
-      // Update Firebase user profile
-      await updateUser({
-        displayName: formData.name,
-        photoURL: formData.photoURL || "",
+      // Show success message
+      await Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your account has been created successfully!",
+        showConfirmButton: false,
+        timer: 1500,
       });
 
-      // Save to MongoDB via backend API
-      try {
-        const dbResponse = await saveUserToDatabase(userProfile);
-        
-        if (dbResponse.success) {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Your account has been created successfully!",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          navigate("/");
-        } else {
-          throw new Error("Failed to save user to database");
-        }
-      } catch (dbError) {
-        console.error("Database save error:", dbError);
-        // If MongoDB save fails, we should delete the Firebase user
-        try {
-          await user.delete();
-        } catch (deleteError) {
-          console.error("Failed to delete Firebase user:", deleteError);
-        }
-        
-        Swal.fire({
-          icon: "error",
-          title: "Account Creation Failed",
-          text: "Failed to create your account. Please try again.",
-        });
-        return;
-      }
+      // Redirect to employee home (new users are always employees)
+      navigate("/employee/home", { replace: true });
     } catch (error) {
       console.error("Signup error:", error);
       
       // Handle different types of errors
-      if (error.message.includes("email-already-in-use")) {
-        setErrors({ firebase: "An account with this email already exists" });
-      } else if (error.message.includes("weak-password")) {
-        setErrors({ firebase: "Password is too weak" });
-      } else if (error.message.includes("invalid-email")) {
-        setErrors({ firebase: "Invalid email address" });
-      } else if (error.message && error.message.includes("User with this email already exists")) {
-        setErrors({ firebase: "An account with this email already exists" });
-      } else {
-        setErrors({ firebase: error.message || "An error occurred during signup" });
+      let errorMessage = "An error occurred during signup";
+      
+      if (error.code === "auth/email-already-in-use" || error.message?.includes("email-already-in-use")) {
+        errorMessage = "An account with this email already exists";
+      } else if (error.code === "auth/weak-password" || error.message?.includes("weak-password")) {
+        errorMessage = "Password is too weak";
+      } else if (error.code === "auth/invalid-email" || error.message?.includes("invalid-email")) {
+        errorMessage = "Invalid email address";
+      } else if (error.message?.includes("Email already registered")) {
+        errorMessage = "An account with this email already exists";
+      } else if (error.message) {
+        errorMessage = error.message;
       }
+
+      setErrors({ firebase: errorMessage });
+      
+      await Swal.fire({
+        icon: "error",
+        title: "Account Creation Failed",
+        text: errorMessage,
+      });
     }
   };
 
@@ -209,39 +187,28 @@ const SignUp = () => {
       const result = await googleSignIn();
       const user = result.user;
 
-      // Prepare user profile from Google auth
-      const userProfile = {
-        uid: user.uid,
-        name: user.displayName || "",
-        email: user.email || "",
-        password: "google-auth", // Special marker for Google auth
-        phone: "",
-        address: "",
-        photoURL: user.photoURL || "",
-        role: "employee"
-      };
+      await Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your account has been created successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
 
-      // Save to MongoDB via backend API
-      const dbResponse = await saveUserToDatabase(userProfile);
-
-      if (dbResponse.success) {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your account has been created successfully!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        navigate("/");
-      }
+      // Redirect based on role (Google sign-in users are employees by default)
+      const redirectPath = user.role === 'admin' ? '/admin/dashboard' : '/employee/home';
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Google signup error:", error);
-      if (error.message && error.message.includes("User with this email already exists")) {
-        // User already exists, just sign them in
-        navigate("/");
-      } else {
-        setErrors({ firebase: error.message || "An error occurred during Google signup" });
-      }
+      
+      const errorMessage = error.message || "An error occurred during Google signup";
+      setErrors({ firebase: errorMessage });
+      
+      await Swal.fire({
+        icon: "error",
+        title: "Google Sign-up Failed",
+        text: errorMessage,
+      });
     }
   };
   return (

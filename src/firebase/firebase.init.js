@@ -7,12 +7,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDJCd4S4x1DzgWCjJnYtJsDy4vWrfkUGWg",
-  authDomain: "tech-trek-client.firebaseapp.com",
-  projectId: "tech-trek-client",
-  storageBucket: "tech-trek-client.firebasestorage.app",
-  messagingSenderId: "98914316126",
-  appId: "1:98914316126:web:06eb63d5da0bc60da429cf"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID
 };
 
 // console.log("API Key:", import.meta.env.VITE_API_KEY);
