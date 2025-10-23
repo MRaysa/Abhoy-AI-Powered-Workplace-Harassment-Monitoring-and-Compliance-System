@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { AuthContext } from '../../contexts/AuthContext';
-import { FaPaperPlane, FaUser, FaRobot, FaGavel, FaShieldAlt } from 'react-icons/fa';
+import { FaPaperPlane, FaUser, FaRobot, FaGavel, FaShieldAlt, FaTimes, FaCalendar, FaClock, FaEnvelope, FaPhone, FaComment } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
 const API_URL = 'http://localhost:3000/api';
@@ -16,6 +16,15 @@ const Chat = () => {
   const [typing, setTyping] = useState(false);
   const [caseAnalysis, setCaseAnalysis] = useState(null);
   const [recommendedLawyer, setRecommendedLawyer] = useState(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [scheduleData, setScheduleData] = useState({
+    date: '',
+    time: '',
+    name: user?.displayName || '',
+    email: user?.email || '',
+    phone: '',
+    message: ''
+  });
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -140,8 +149,361 @@ const Chat = () => {
     }
   };
 
+  const handleScheduleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!scheduleData.date || !scheduleData.time || !scheduleData.name || !scheduleData.email) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        text: 'Please fill in all required fields',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      return;
+    }
+
+    try {
+      const lawyerName = recommendedLawyer?.name || 'Your Legal Expert';
+      const formattedDate = new Date(scheduleData.date).toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      const formattedTime = scheduleData.time;
+      
+      const fee = recommendedLawyer?.consultationFee === 0 || recommendedLawyer?.consultationFee === undefined || recommendedLawyer?.consultationFee === null
+        ? 'FREE Initial Consultation'
+        : `$${recommendedLawyer.consultationFee.toFixed(2)}`;
+      Swal.fire({
+        title: '<strong style="color: #7c3aed;">🎉 Consultation Confirmed!</strong>',
+        html: `
+          <div style="font-family: 'Inter', sans-serif; padding: 20px; text-align: left; line-height: 1.8;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Your Appointment Details</h3>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+              <p style="margin: 8px 0; color: #495057;">
+                <span style="display: inline-block; width: 100px; font-weight: 600; color: #6c757d;">👨‍⚖️ Lawyer:</span>
+                <span style="color: #7c3aed; font-weight: 600;">${lawyerName}</span>
+              </p>
+              <p style="margin: 8px 0; color: #495057;">
+                <span style="display: inline-block; width: 100px; font-weight: 600; color: #6c757d;">📅 Date:</span>
+                <span style="color: #212529;">${formattedDate}</span>
+              </p>
+              <p style="margin: 8px 0; color: #495057;">
+                <span style="display: inline-block; width: 100px; font-weight: 600; color: #6c757d;">🕐 Time:</span>
+                <span style="color: #212529;">${formattedTime}</span>
+              </p>
+              <p style="margin: 8px 0; color: #495057;">
+                <span style="display: inline-block; width: 100px; font-weight: 600; color: #6c757d;">💼 Fee:</span>
+                <span style="color: #212529;">${fee}</span>
+              </p>
+            </div>
+
+            <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #0d6efd;">
+              <p style="margin: 8px 0; color: #495057;">
+                <span style="display: inline-block; width: 100px; font-weight: 600; color: #6c757d;">📧 Email:</span>
+                <span style="color: #212529;">${scheduleData.email}</span>
+              </p>
+              ${scheduleData.phone ? `
+              <p style="margin: 8px 0; color: #495057;">
+                <span style="display: inline-block; width: 100px; font-weight: 600; color: #6c757d;">📞 Phone:</span>
+                <span style="color: #212529;">${scheduleData.phone}</span>
+              </p>
+              ` : ''}
+            </div>
+
+            ${scheduleData.message ? `
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+              <p style="margin: 0; font-weight: 600; color: #856404; margin-bottom: 5px;">📝 Your Message:</p>
+              <p style="margin: 0; color: #856404; font-style: italic;">"${scheduleData.message}"</p>
+            </div>
+            ` : ''}
+
+            <div style="background: #d1f2eb; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; border: 2px dashed #20c997;">
+              <p style="margin: 0; color: #0f5132; font-weight: 600;">
+                ✅ Confirmation email has been sent to your inbox
+              </p>
+              <p style="margin: 8px 0 0 0; font-size: 13px; color: #146c54;">
+                Please check your spam folder if you don't see it within 5 minutes
+              </p>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+              <p style="margin: 0; font-size: 14px; color: #6c757d;">
+                💼 <strong style="color: #495057;">Need to reschedule?</strong><br>
+                Contact us at <a href="mailto:support@abhoy.com" style="color: #7c3aed; text-decoration: none;">support@abhoy.com</a>
+              </p>
+            </div>
+          </div>
+        `,
+        width: '600px',
+        showConfirmButton: true,
+        confirmButtonText: 'Got it! 👍',
+        confirmButtonColor: '#7c3aed',
+        customClass: {
+          popup: 'animated-popup',
+          confirmButton: 'custom-confirm-button'
+        }
+      });
+
+      // Reset form and close modal
+      setShowScheduleModal(false);
+      setScheduleData({
+        date: '',
+        time: '',
+        name: user?.displayName || '',
+        email: user?.email || '',
+        phone: '',
+        message: ''
+      });
+    } catch (err) {
+      console.error('Schedule error:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops! Something went wrong',
+        text: 'Failed to schedule consultation. Please try again or contact support.',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+      });
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setScheduleData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
+      {/* Schedule Modal */}
+      {showScheduleModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto`}>
+            {/* Modal Header */}
+            <div className={`flex items-center justify-between p-6 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div>
+                <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Schedule Consultation
+                </h3>
+                <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Book a meeting with {recommendedLawyer?.name}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'} transition`}
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleScheduleSubmit} className="p-6">
+              <div className="space-y-4">
+                {/* Date and Time */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <FaCalendar className="inline mr-2" />
+                      Preferred Date *
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={scheduleData.date}
+                      onChange={handleInputChange}
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white'
+                          : 'bg-white border-gray-300 text-gray-900'
+                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <FaClock className="inline mr-2" />
+                      Preferred Time *
+                    </label>
+                    <input
+                      type="time"
+                      name="time"
+                      value={scheduleData.time}
+                      onChange={handleInputChange}
+                      required
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white'
+                          : 'bg-white border-gray-300 text-gray-900'
+                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                    />
+                  </div>
+                </div>
+
+                {/* Name */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <FaUser className="inline mr-2" />
+                    Your Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={scheduleData.name}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter your full name"
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      isDark
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                  />
+                </div>
+
+                {/* Email and Phone */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <FaEnvelope className="inline mr-2" />
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={scheduleData.email}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="your.email@example.com"
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <FaPhone className="inline mr-2" />
+                      Phone Number (Optional)
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={scheduleData.phone}
+                      onChange={handleInputChange}
+                      placeholder="+1 (555) 123-4567"
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                    />
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <FaComment className="inline mr-2" />
+                    Additional Information (Optional)
+                  </label>
+                  <textarea
+                    name="message"
+                    value={scheduleData.message}
+                    onChange={handleInputChange}
+                    rows="4"
+                    placeholder="Brief description of your case or any specific concerns..."
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      isDark
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none`}
+                  />
+                </div>
+
+                {/* Case Info Summary */}
+                {caseAnalysis && (
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-purple-50'}`}>
+                    <p className={`text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      📋 Your Case Information
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className={`px-3 py-1 rounded-full text-xs ${isDark ? 'bg-gray-600 text-gray-200' : 'bg-white text-gray-700'}`}>
+                        Type: {caseAnalysis.caseType.replace(/-/g, ' ').toUpperCase()}
+                      </span>
+                      <span className={`px-3 py-1 rounded-full text-xs ${
+                        caseAnalysis.severity === 'high' ? 'bg-red-600 text-white' :
+                        caseAnalysis.severity === 'medium' ? 'bg-yellow-600 text-white' :
+                        'bg-green-600 text-white'
+                      }`}>
+                        Severity: {caseAnalysis.severity.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Lawyer Info */}
+                {recommendedLawyer && (
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-indigo-50'}`}>
+                    <p className={`text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      👨‍⚖️ Consulting With
+                    </p>
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      {recommendedLawyer.name}
+                    </p>
+                    <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {recommendedLawyer.specializations?.slice(0, 3).map(s => s.replace(/-/g, ' ')).join(', ')}
+                    </p>
+                    <p className={`text-sm mt-2 ${isDark ? 'text-green-400' : 'text-green-600'} font-semibold`}>
+                      Consultation Fee: {
+                        recommendedLawyer.consultationFee === 0 || recommendedLawyer.consultationFee === undefined || recommendedLawyer.consultationFee === null
+                          ? '✅ FREE Initial Consultation'
+                          : `$${recommendedLawyer.consultationFee}`
+                      }
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  type="button"
+                  onClick={() => setShowScheduleModal(false)}
+                  className={`px-6 py-3 rounded-lg font-medium ${
+                    isDark
+                      ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  } transition`}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition"
+                >
+                  Confirm Schedule
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-t-xl shadow-lg p-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
@@ -444,7 +806,10 @@ const Chat = () => {
                   </p>
                 </div>
                 
-                <button className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-xl hover:from-purple-700 hover:to-indigo-700 transition-all transform hover:scale-105">
+                <button 
+                  onClick={() => setShowScheduleModal(true)}
+                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-xl hover:from-purple-700 hover:to-indigo-700 transition-all transform hover:scale-105"
+                >
                   <span className="flex items-center justify-center space-x-2">
                     <span>📅</span>
                     <span>Schedule Consultation</span>
