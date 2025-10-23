@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { AuthContext } from '../../contexts/AuthContext';
-import { FaPaperPlane, FaUser, FaRobot, FaPhone, FaVideo, FaEllipsisV, FaGavel, FaShieldAlt } from 'react-icons/fa';
+import { FaPaperPlane, FaUser, FaRobot, FaGavel, FaShieldAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
 const API_URL = 'http://localhost:3000/api';
@@ -152,23 +152,12 @@ const Chat = () => {
               </div>
               <div>
                 <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  অভয় Support
+                  অভয় AI Legal Assistant
                 </h2>
                 <p className={`text-sm ${isDark ? 'text-green-400' : 'text-green-600'}`}>
-                  ● Online
+                  ● Online - AI Powered
                 </p>
               </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'} transition`}>
-                <FaPhone className="text-lg" />
-              </button>
-              <button className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'} transition`}>
-                <FaVideo className="text-lg" />
-              </button>
-              <button className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'} transition`}>
-                <FaEllipsisV className="text-lg" />
-              </button>
             </div>
           </div>
         </div>
@@ -325,79 +314,157 @@ const Chat = () => {
 
         {recommendedLawyer && (
           <div className={`mt-6 ${isDark ? 'bg-gradient-to-br from-purple-900 to-indigo-900' : 'bg-gradient-to-br from-purple-50 to-indigo-50'} rounded-xl shadow-lg p-6 border-2 ${isDark ? 'border-purple-700' : 'border-purple-200'}`}>
-            <div className="flex items-center mb-4">
-              <FaShieldAlt className="text-purple-600 text-2xl mr-3" />
-              <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                Recommended Legal Expert
-              </h3>
+            <div className="flex items-center mb-6">
+              <div className="h-12 w-12 rounded-full bg-purple-600 flex items-center justify-center mr-3">
+                <FaShieldAlt className="text-white text-2xl" />
+              </div>
+              <div>
+                <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Recommended Legal Expert
+                </h3>
+                <p className={`text-sm ${isDark ? 'text-purple-300' : 'text-purple-600'}`}>
+                  Best match for your case
+                </p>
+              </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2">
-                <h4 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {recommendedLawyer.name}
-                </h4>
-                <p className={`text-sm mb-4 ${isDark ? 'text-purple-300' : 'text-purple-600'}`}>
-                  {recommendedLawyer.specializations.map(s => s.replace(/-/g, ' ')).join(' • ')}
-                </p>
+              <div className="md:col-span-2 space-y-4">
+                {/* Lawyer Name & Title */}
+                <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'}`}>
+                  <h4 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    {recommendedLawyer.name || 'Legal Expert'}
+                  </h4>
+                  {recommendedLawyer.specializations && recommendedLawyer.specializations.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {recommendedLawyer.specializations.map((spec, idx) => (
+                        <span key={idx} className={`px-3 py-1 rounded-full text-xs font-medium ${isDark ? 'bg-purple-800 text-purple-200' : 'bg-purple-100 text-purple-700'}`}>
+                          {spec.replace(/-/g, ' ').toUpperCase()}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={`text-sm ${isDark ? 'text-purple-300' : 'text-purple-600'}`}>
+                      General Practice
+                    </p>
+                  )}
+                </div>
                 
+                {/* Bio */}
                 {recommendedLawyer.bio && (
-                  <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {recommendedLawyer.bio}
-                  </p>
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'}`}>
+                    <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {recommendedLawyer.bio}
+                    </p>
+                  </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Experience</p>
-                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      {recommendedLawyer.experience} years
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} text-center`}>
+                    <p className={`text-2xl font-bold ${isDark ? 'text-indigo-400' : 'text-indigo-600'} mb-1`}>
+                      {recommendedLawyer.experience || '10'}
                     </p>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Years Experience</p>
                   </div>
-                  <div>
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} text-center`}>
+                    <p className={`text-2xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'} mb-1`}>
+                      {recommendedLawyer.successRate || '90'}%
+                    </p>
                     <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Success Rate</p>
-                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      {recommendedLawyer.successRate}%
-                    </p>
                   </div>
-                  <div>
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} text-center`}>
+                    <p className={`text-2xl font-bold ${isDark ? 'text-purple-400' : 'text-purple-600'} mb-1`}>
+                      {recommendedLawyer.casesHandled || '100'}+
+                    </p>
                     <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Cases Handled</p>
-                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      {recommendedLawyer.casesHandled}+
-                    </p>
                   </div>
-                  <div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Rating</p>
-                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      ⭐ {recommendedLawyer.rating}/5
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} text-center`}>
+                    <p className={`text-2xl font-bold ${isDark ? 'text-yellow-400' : 'text-yellow-600'} mb-1`}>
+                      ⭐ {recommendedLawyer.rating || '4.8'}
                     </p>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Rating</p>
                   </div>
                 </div>
 
+                {/* Contact Information */}
                 <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'}`}>
-                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Contact Information</p>
-                  <p className={`${isDark ? 'text-white' : 'text-gray-900'} mb-1`}>
-                    📧 {recommendedLawyer.email}
+                  <p className={`text-sm font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-3`}>
+                    📞 Contact Information
                   </p>
-                  <p className={`${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    📞 {recommendedLawyer.phone}
-                  </p>
+                  <div className="space-y-2">
+                    {recommendedLawyer.email && recommendedLawyer.email !== 'N/A' ? (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">📧</span>
+                        <a href={`mailto:${recommendedLawyer.email}`} className={`${isDark ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'} transition`}>
+                          {recommendedLawyer.email}
+                        </a>
+                      </div>
+                    ) : null}
+                    {recommendedLawyer.phone && recommendedLawyer.phone !== 'N/A' ? (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">📞</span>
+                        <a href={`tel:${recommendedLawyer.phone}`} className={`${isDark ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'} transition`}>
+                          {recommendedLawyer.phone}
+                        </a>
+                      </div>
+                    ) : null}
+                    {recommendedLawyer.location && (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">📍</span>
+                        <span className={`${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {recommendedLawyer.location.city}, {recommendedLawyer.location.state}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="flex flex-col justify-center">
-                <div className={`text-center p-6 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} mb-4`}>
-                  <p className={`text-3xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'} mb-2`}>
-                    {recommendedLawyer.consultationFee === 0 ? 'FREE' : `$${recommendedLawyer.consultationFee}`}
+              {/* Right Column - Consultation Fee & Action */}
+              <div className="flex flex-col justify-center space-y-4">
+                <div className={`text-center p-8 rounded-lg ${isDark ? 'bg-gradient-to-br from-green-900 to-emerald-900' : 'bg-gradient-to-br from-green-50 to-emerald-50'} border-2 ${isDark ? 'border-green-700' : 'border-green-200'}`}>
+                  <div className="mb-3">
+                    <div className={`inline-block px-4 py-2 rounded-full ${isDark ? 'bg-green-800' : 'bg-green-100'}`}>
+                      <span className="text-4xl">💰</span>
+                    </div>
+                  </div>
+                  <p className={`text-4xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'} mb-2`}>
+                    {recommendedLawyer.consultationFee === 0 || !recommendedLawyer.consultationFee ? (
+                      'FREE'
+                    ) : (
+                      `$${recommendedLawyer.consultationFee}`
+                    )}
                   </p>
-                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-sm font-medium ${isDark ? 'text-green-300' : 'text-green-700'}`}>
                     Initial Consultation
+                  </p>
+                  <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    No commitment required
                   </p>
                 </div>
                 
-                <button className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-xl transition">
-                  Schedule Consultation
+                <button className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-xl hover:from-purple-700 hover:to-indigo-700 transition-all transform hover:scale-105">
+                  <span className="flex items-center justify-center space-x-2">
+                    <span>📅</span>
+                    <span>Schedule Consultation</span>
+                  </span>
                 </button>
+
+                {recommendedLawyer.languages && recommendedLawyer.languages.length > 0 && (
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} text-center`}>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+                      Languages Spoken
+                    </p>
+                    <div className="flex flex-wrap gap-1 justify-center">
+                      {recommendedLawyer.languages.map((lang, idx) => (
+                        <span key={idx} className={`px-2 py-1 rounded text-xs ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
+                          {lang}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

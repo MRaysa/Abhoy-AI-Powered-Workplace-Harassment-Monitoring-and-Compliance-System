@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import Root from "../pages/Root";
 import ErrorPage from "../pages/ErrorPage";
 import HomePage from "../pages/HomePage";
@@ -60,21 +60,23 @@ const router = createBrowserRouter([
   },
   // Protected Employee Routes
   {
-    ...employeeRoutes,
+    path: employeeRoutes.path,
     element: (
       <PrivateRoute>
         {employeeRoutes.element}
       </PrivateRoute>
     ),
+    children: employeeRoutes.children,
   },
   // Protected Admin Routes
   {
-    ...adminRoutes,
+    path: adminRoutes.path,
     element: (
       <PrivateRoute requiredRole="Admin">
         {adminRoutes.element}
       </PrivateRoute>
     ),
+    children: adminRoutes.children,
   },
 ]);
 
