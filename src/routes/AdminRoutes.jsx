@@ -1,6 +1,7 @@
 import React from "react";
 import AdminLayout from "../components/layouts/AdminLayout";
 import Dashboard from "../pages/Admin/Dashboard";
+import EnhancedDashboard from "../pages/Admin/EnhancedDashboard";
 import ReportsTable from "../pages/Admin/ReportsTable";
 import Analytics from "../pages/Admin/Analytics";
 import DepartmentView from "../pages/Admin/DepartmentView";
@@ -15,6 +16,10 @@ const adminRoutes = {
     {
       path: "dashboard",
       element: <Dashboard />,
+    },
+    {
+      path: "enhanced-dashboard",
+      element: <EnhancedDashboard />,
     },
     {
       path: "reports",

@@ -33,7 +33,21 @@ const SignIn = () => {
 
     try {
       const result = await signInUser(email, password);
-      const user = result.user;
+      
+      // Get user role from backend response
+      const response = await fetch('http://localhost:3000/api/auth/verify-firebase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uid: result.user.uid,
+          email: result.user.email
+        }),
+      });
+
+      const data = await response.json();
+      const userRole = data.data?.user?.role || 'employee';
 
       // Show success message
       await Swal.fire({
@@ -45,7 +59,7 @@ const SignIn = () => {
       });
 
       // Redirect based on role
-      const redirectPath = user.role === 'admin' 
+      const redirectPath = userRole === 'admin' 
         ? '/admin/dashboard' 
         : location?.state?.from || '/employee/home';
       
@@ -80,7 +94,21 @@ const SignIn = () => {
     
     try {
       const result = await googleSignIn();
-      const user = result.user;
+      
+      // Get user role from backend response
+      const response = await fetch('http://localhost:3000/api/auth/verify-firebase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uid: result.user.uid,
+          email: result.user.email
+        }),
+      });
+
+      const data = await response.json();
+      const userRole = data.data?.user?.role || 'employee';
 
       await Swal.fire({
         position: "top-end",
@@ -91,7 +119,7 @@ const SignIn = () => {
       });
 
       // Redirect based on role
-      const redirectPath = user.role === 'admin' 
+      const redirectPath = userRole === 'admin' 
         ? '/admin/dashboard' 
         : location?.state?.from || '/employee/home';
       

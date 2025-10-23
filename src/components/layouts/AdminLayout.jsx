@@ -10,11 +10,13 @@ import {
   FaCertificate,
   FaUsers,
   FaShieldAlt,
+  FaChartLine,
 } from "react-icons/fa";
 
 const AdminLayout = () => {
   const menuItems = [
     { path: "/admin/dashboard", label: "Dashboard", icon: <FaChartPie /> },
+    { path: "/admin/enhanced-dashboard", label: "📊 Analytics Dashboard", icon: <FaChartLine /> },
     { path: "/admin/reports", label: "All Reports", icon: <FaTable /> },
     { path: "/admin/complaints", label: "Manage Complaints", icon: <FaShieldAlt /> },
     { path: "/admin/analytics", label: "Analytics", icon: <FaChartBar /> },
