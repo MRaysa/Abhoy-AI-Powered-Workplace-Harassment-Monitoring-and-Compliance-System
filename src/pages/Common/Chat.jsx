@@ -1,53 +1,142 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
-import { FaPaperPlane, FaUser, FaRobot, FaPhone, FaVideo, FaEllipsisV } from 'react-icons/fa';
+import { AuthContext } from '../../contexts/AuthContext';
+import { FaPaperPlane, FaUser, FaRobot, FaPhone, FaVideo, FaEllipsisV, FaGavel, FaShieldAlt } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+
+const API_URL = 'http://localhost:3000/api';
 
 const Chat = () => {
   const { isDark } = useTheme();
+  const { user, getToken } = useContext(AuthContext);
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'bot',
-      text: 'Hello! How can I help you today? I\'m here to assist with any questions about harassment reporting or workplace safety.',
-      time: '10:30 AM'
-    },
-    {
-      id: 2,
-      sender: 'user',
-      text: 'I need help filing a complaint.',
-      time: '10:31 AM'
-    },
-    {
-      id: 3,
-      sender: 'bot',
-      text: 'I can help you with that. You have two options:\n\n1. **Anonymous Complaint** - Your identity remains completely hidden\n2. **Regular Report** - Your identity is visible to authorized personnel\n\nWhich would you prefer?',
-      time: '10:31 AM'
+  const [messages, setMessages] = useState([]);
+  const [sessionId, setSessionId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [caseAnalysis, setCaseAnalysis] = useState(null);
+  const [recommendedLawyer, setRecommendedLawyer] = useState(null);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, typing]);
+
+  // Load or start chat session
+  useEffect(() => {
+    if (user) {
+      startChatSession();
     }
-  ]);
+  }, [user]);
 
-  const handleSendMessage = (e) => {
+  const startChatSession = async () => {
+    try {
+      setLoading(true);
+      const token = getToken();
+      
+      const response = await fetch(`${API_URL}/chat/session/start`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setSessionId(data.data._id);
+        setMessages(data.data.messages || []);
+        if (data.data.caseAnalysis) {
+          setCaseAnalysis(data.data.caseAnalysis);
+        }
+        if (data.data.recommendedLawyer) {
+          setRecommendedLawyer(data.data.recommendedLawyer);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to start chat:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Connection Error',
+        text: 'Failed to connect to AI assistant',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (message.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        sender: 'user',
-        text: message,
-        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages([...messages, newMessage]);
-      setMessage('');
+    if (!message.trim() || !sessionId) return;
 
-      // Simulate bot response
-      setTimeout(() => {
-        const botResponse = {
-          id: messages.length + 2,
-          sender: 'bot',
-          text: 'Thank you for your message. Our support team will assist you shortly.',
-          time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-        };
-        setMessages(prev => [...prev, botResponse]);
-      }, 1000);
+    const userMessage = message;
+    setMessage('');
+    
+    // Add user message immediately
+    setMessages(prev => [...prev, {
+      role: 'user',
+      content: userMessage,
+      timestamp: new Date()
+    }]);
+
+    setTyping(true);
+
+    try {
+      const token = getToken();
+      
+      const response = await fetch(`${API_URL}/chat/message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          sessionId
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setMessages(data.data.messages || []);
+        if (data.data.caseAnalysis) {
+          setCaseAnalysis(data.data.caseAnalysis);
+        }
+        if (data.data.recommendedLawyer) {
+          setRecommendedLawyer(data.data.recommendedLawyer);
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.message || 'Failed to send message',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      }
+    } catch (error) {
+      console.error('Send message error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Connection Error',
+        text: 'Failed to send message. Please try again.',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } finally {
+      setTyping(false);
     }
   };
 
@@ -86,44 +175,92 @@ const Chat = () => {
 
         {/* Chat Messages */}
         <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} shadow-lg p-6 h-[500px] overflow-y-auto`}>
-          <div className="space-y-4">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`flex items-start space-x-2 max-w-lg ${msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    msg.sender === 'user' 
-                      ? 'bg-indigo-600' 
-                      : 'bg-gradient-to-r from-purple-500 to-pink-500'
-                  }`}>
-                    {msg.sender === 'user' ? (
-                      <FaUser className="text-white text-sm" />
-                    ) : (
-                      <FaRobot className="text-white text-sm" />
-                    )}
-                  </div>
-                  <div>
-                    <div
-                      className={`px-4 py-2 rounded-2xl ${
-                        msg.sender === 'user'
-                          ? 'bg-indigo-600 text-white'
-                          : isDark
-                          ? 'bg-gray-700 text-gray-100'
-                          : 'bg-gray-100 text-gray-900'
-                      }`}
-                    >
-                      <p className="whitespace-pre-line">{msg.text}</p>
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading AI Assistant...</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`flex items-start space-x-2 max-w-3xl ${msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                    <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      msg.role === 'user' 
+                        ? 'bg-indigo-600' 
+                        : 'bg-gradient-to-r from-purple-500 to-pink-500'
+                    }`}>
+                      {msg.role === 'user' ? (
+                        <FaUser className="text-white text-sm" />
+                      ) : (
+                        <FaGavel className="text-white text-sm" />
+                      )}
                     </div>
-                    <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'} ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
-                      {msg.time}
-                    </p>
+                    <div className="flex-1">
+                      <div
+                        className={`px-4 py-3 rounded-2xl ${
+                          msg.role === 'user'
+                            ? 'bg-indigo-600 text-white'
+                            : isDark
+                            ? 'bg-gray-700 text-gray-100'
+                            : 'bg-gray-100 text-gray-900'
+                        }`}
+                      >
+                        <div className="whitespace-pre-line markdown-content">
+                          {msg.content.split('\n').map((line, i) => {
+                            // Bold text **text**
+                            if (line.includes('**')) {
+                              const parts = line.split('**');
+                              return (
+                                <p key={i} className="mb-2">
+                                  {parts.map((part, j) => 
+                                    j % 2 === 1 ? <strong key={j}>{part}</strong> : part
+                                  )}
+                                </p>
+                              );
+                            }
+                            // List items
+                            if (line.trim().match(/^[\d]+\.|^-/)) {
+                              return <li key={i} className="ml-4 mb-1">{line.replace(/^[\d]+\.|^-/, '').trim()}</li>;
+                            }
+                            // Regular line
+                            return line.trim() ? <p key={i} className="mb-2">{line}</p> : <br key={i} />;
+                          })}
+                        </div>
+                      </div>
+                      <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'} ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                        {new Date(msg.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+              
+              {typing && (
+                <div className="flex justify-start">
+                  <div className="flex items-start space-x-2 max-w-lg">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 bg-gradient-to-r from-purple-500 to-pink-500">
+                      <FaGavel className="text-white text-sm" />
+                    </div>
+                    <div className={`px-4 py-3 rounded-2xl ${isDark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                      <div className="flex space-x-2">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+          )}
         </div>
 
         {/* Message Input */}
@@ -154,6 +291,118 @@ const Chat = () => {
         </div>
 
         {/* Quick Actions */}
+        {caseAnalysis && (
+          <div className={`mt-6 ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+            <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              📋 Case Summary
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Case Type</p>
+                <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  {caseAnalysis.caseType.replace(/-/g, ' ').toUpperCase()}
+                </p>
+              </div>
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Severity Level</p>
+                <p className={`font-semibold ${
+                  caseAnalysis.severity === 'high' ? 'text-red-500' :
+                  caseAnalysis.severity === 'medium' ? 'text-yellow-500' :
+                  'text-green-500'
+                }`}>
+                  {caseAnalysis.severity.toUpperCase()}
+                </p>
+              </div>
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Keywords</p>
+                <p className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {caseAnalysis.keywords.slice(0, 3).join(', ')}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {recommendedLawyer && (
+          <div className={`mt-6 ${isDark ? 'bg-gradient-to-br from-purple-900 to-indigo-900' : 'bg-gradient-to-br from-purple-50 to-indigo-50'} rounded-xl shadow-lg p-6 border-2 ${isDark ? 'border-purple-700' : 'border-purple-200'}`}>
+            <div className="flex items-center mb-4">
+              <FaShieldAlt className="text-purple-600 text-2xl mr-3" />
+              <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                Recommended Legal Expert
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <h4 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  {recommendedLawyer.name}
+                </h4>
+                <p className={`text-sm mb-4 ${isDark ? 'text-purple-300' : 'text-purple-600'}`}>
+                  {recommendedLawyer.specializations.map(s => s.replace(/-/g, ' ')).join(' • ')}
+                </p>
+                
+                {recommendedLawyer.bio && (
+                  <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {recommendedLawyer.bio}
+                  </p>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Experience</p>
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      {recommendedLawyer.experience} years
+                    </p>
+                  </div>
+                  <div>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Success Rate</p>
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      {recommendedLawyer.successRate}%
+                    </p>
+                  </div>
+                  <div>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Cases Handled</p>
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      {recommendedLawyer.casesHandled}+
+                    </p>
+                  </div>
+                  <div>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Rating</p>
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      ⭐ {recommendedLawyer.rating}/5
+                    </p>
+                  </div>
+                </div>
+
+                <div className={`p-4 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'}`}>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Contact Information</p>
+                  <p className={`${isDark ? 'text-white' : 'text-gray-900'} mb-1`}>
+                    📧 {recommendedLawyer.email}
+                  </p>
+                  <p className={`${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    📞 {recommendedLawyer.phone}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center">
+                <div className={`text-center p-6 rounded-lg ${isDark ? 'bg-black bg-opacity-30' : 'bg-white'} mb-4`}>
+                  <p className={`text-3xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'} mb-2`}>
+                    {recommendedLawyer.consultationFee === 0 ? 'FREE' : `$${recommendedLawyer.consultationFee}`}
+                  </p>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Initial Consultation
+                  </p>
+                </div>
+                
+                <button className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-xl transition">
+                  Schedule Consultation
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-4 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer`}>
             <h3 className={`font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
