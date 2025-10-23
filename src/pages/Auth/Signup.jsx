@@ -15,11 +15,13 @@ import { useNavigate, Link } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
 import { userAPI } from "../../services/api";
 import Swal from "sweetalert2";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const SignUp = () => {
   const { createUser, googleSignIn, updateUser, loading } =
     useContext(AuthContext);
   const navigate = useNavigate();
+  const { isDark } = useTheme();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -212,12 +214,18 @@ const SignUp = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+    <div className={`min-h-screen flex items-center justify-center p-4 ${
+      isDark
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+        : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
+    }`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
+        className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden ${
+          isDark ? 'bg-gray-800' : 'bg-white'
+        }`}
       >
         {/* Header */}
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-center relative overflow-hidden">
@@ -232,7 +240,7 @@ const SignUp = () => {
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-lg"
             >
-              <span className="text-indigo-600 font-bold text-3xl">S</span>
+              <span className="text-indigo-600 font-bold text-3xl">অ</span>
             </motion.div>
             <h1 className="text-3xl font-bold text-white">Join অভয়</h1>
             <p className="text-indigo-100 mt-2">Create your workplace safety account</p>
@@ -242,7 +250,11 @@ const SignUp = () => {
         {/* Error Message */}
         {errors.firebase && (
           <div className="px-8 pt-6">
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+            <div className={`border-l-4 p-4 ${
+              isDark
+                ? 'bg-red-900/50 border-red-500 text-red-200'
+                : 'bg-red-100 border-red-500 text-red-700'
+            }`}>
               <p>{errors.firebase}</p>
             </div>
           </div>
@@ -253,7 +265,11 @@ const SignUp = () => {
           {/* Profile Picture Section */}
           <div className="flex flex-col items-center space-y-2">
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-2 border-indigo-100">
+              <div className={`w-24 h-24 rounded-full flex items-center justify-center overflow-hidden border-2 ${
+                isDark
+                  ? 'bg-gray-700 border-gray-600'
+                  : 'bg-gray-200 border-indigo-100'
+              }`}>
                 {imagePreview ? (
                   <img
                     src={imagePreview}
@@ -261,7 +277,9 @@ const SignUp = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <FaImage className="text-gray-400 text-3xl" />
+                  <FaImage className={`text-3xl ${
+                    isDark ? 'text-gray-500' : 'text-gray-400'
+                  }`} />
                 )}
               </div>
             </div>
@@ -278,7 +296,7 @@ const SignUp = () => {
                 />
                 <label
                   htmlFor="upload-option"
-                  className="text-sm text-gray-700"
+                  className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
                 >
                   Upload Image
                 </label>
@@ -310,7 +328,7 @@ const SignUp = () => {
                   onChange={() => setUseImageUrl(true)}
                   className="mr-2"
                 />
-                <label htmlFor="url-option" className="text-sm text-gray-700">
+                <label htmlFor="url-option" className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Use Image URL
                 </label>
               </div>
@@ -323,9 +341,13 @@ const SignUp = () => {
                     value={formData.photoURL}
                     onChange={handleImageUrlChange}
                     placeholder="https://example.com/image.jpg"
-                    className={`w-full px-3 py-2 border ${
-                      errors.photoURL ? "border-red-500" : "border-gray-300"
-                    } rounded-md text-sm shadow-sm`}
+                    className={`w-full px-3 py-2 border rounded-md text-sm shadow-sm ${
+                      errors.photoURL
+                        ? "border-red-500"
+                        : isDark
+                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          : "border-gray-300 bg-white"
+                    }`}
                   />
                   {errors.photoURL && (
                     <p className="text-red-500 text-xs mt-1">
@@ -341,7 +363,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="name"
-              className="flex items-center text-sm font-medium text-gray-700"
+              className={`flex items-center text-sm font-medium ${
+                isDark ? 'text-gray-200' : 'text-gray-700'
+              }`}
             >
               <FaUser className="mr-2 text-indigo-500" />
               Full Name
@@ -352,9 +376,13 @@ const SignUp = () => {
               type="text"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+                errors.name
+                  ? "border-red-500"
+                  : isDark
+                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                    : "border-gray-300 bg-white"
+              }`}
               placeholder="John Doe"
               required
             />
@@ -367,7 +395,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="email"
-              className="flex items-center text-sm font-medium text-gray-700"
+              className={`flex items-center text-sm font-medium ${
+                isDark ? 'text-gray-200' : 'text-gray-700'
+              }`}
             >
               <FaEnvelope className="mr-2 text-indigo-500" />
               Email Address
@@ -378,9 +408,13 @@ const SignUp = () => {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+                errors.email
+                  ? "border-red-500"
+                  : isDark
+                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                    : "border-gray-300 bg-white"
+              }`}
               placeholder="your@email.com"
               required
             />
@@ -393,7 +427,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="password"
-              className="flex items-center text-sm font-medium text-gray-700"
+              className={`flex items-center text-sm font-medium ${
+                isDark ? 'text-gray-200' : 'text-gray-700'
+              }`}
             >
               <FaLock className="mr-2 text-indigo-500" />
               Password
@@ -405,9 +441,13 @@ const SignUp = () => {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+                  errors.password
+                    ? "border-red-500"
+                    : isDark
+                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      : "border-gray-300 bg-white"
+                }`}
                 placeholder="••••••••"
                 required
               />
@@ -417,16 +457,16 @@ const SignUp = () => {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <FaEyeSlash className="text-gray-500" />
+                  <FaEyeSlash className={isDark ? 'text-gray-400' : 'text-gray-500'} />
                 ) : (
-                  <FaEye className="text-gray-500" />
+                  <FaEye className={isDark ? 'text-gray-400' : 'text-gray-500'} />
                 )}
               </button>
             </div>
             {errors.password ? (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             ) : (
-              <p className="text-gray-500 text-xs mt-1">
+              <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Must be at least 6 characters with uppercase, lowercase, and number
               </p>
             )}
@@ -436,7 +476,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="phone"
-              className="flex items-center text-sm font-medium text-gray-700"
+              className={`flex items-center text-sm font-medium ${
+                isDark ? 'text-gray-200' : 'text-gray-700'
+              }`}
             >
               <FaPhone className="mr-2 text-indigo-500" />
               Phone Number
@@ -447,9 +489,13 @@ const SignUp = () => {
               type="tel"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border ${
-                errors.phone ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+                errors.phone
+                  ? "border-red-500"
+                  : isDark
+                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                    : "border-gray-300 bg-white"
+              }`}
               placeholder="1234567890"
             />
             {errors.phone && (
@@ -461,7 +507,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="address"
-              className="flex items-center text-sm font-medium text-gray-700"
+              className={`flex items-center text-sm font-medium ${
+                isDark ? 'text-gray-200' : 'text-gray-700'
+              }`}
             >
               <FaMapMarkerAlt className="mr-2 text-indigo-500" />
               Address
@@ -471,7 +519,11 @@ const SignUp = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+                isDark
+                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  : "border-gray-300 bg-white"
+              }`}
               placeholder="123 Main St, City, Country"
               rows="2"
             />
@@ -501,10 +553,14 @@ const SignUp = () => {
           {/* Divider */}
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className={`w-full border-t ${
+                isDark ? 'border-gray-600' : 'border-gray-300'
+              }`}></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-3 bg-white text-gray-500">
+              <span className={`px-3 ${
+                isDark ? 'bg-gray-800 text-gray-400' : 'bg-white text-gray-500'
+              }`}>
                 Or sign up with
               </span>
             </div>
@@ -516,7 +572,11 @@ const SignUp = () => {
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={handleGoogleRegister}
-            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all font-medium text-gray-700"
+            className={`w-full flex items-center justify-center gap-3 py-3 px-4 border-2 rounded-lg transition-all font-medium ${
+              isDark
+                ? 'border-gray-600 hover:bg-gray-700 hover:border-gray-500 text-gray-200'
+                : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700'
+            }`}
           >
             <FaGoogle className="text-red-500 text-xl" />
             <span>Sign up with Google</span>
@@ -524,17 +584,25 @@ const SignUp = () => {
         </form>
 
         {/* Footer */}
-        <div className="bg-gradient-to-r from-gray-50 to-indigo-50 px-8 py-5 text-center border-t border-gray-200">
-          <p className="text-sm text-gray-600">
+        <div className={`px-8 py-5 text-center border-t ${
+          isDark
+            ? 'bg-gradient-to-r from-gray-700 to-gray-700 border-gray-700'
+            : 'bg-gradient-to-r from-gray-50 to-indigo-50 border-gray-200'
+        }`}>
+          <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Already have an account?{" "}
             <Link
               to="/signin"
-              className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline transition"
+              className={`font-semibold hover:underline transition ${
+                isDark
+                  ? 'text-indigo-400 hover:text-indigo-300'
+                  : 'text-indigo-600 hover:text-indigo-700'
+              }`}
             >
               Sign in
             </Link>
           </p>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
             Secure workplace harassment monitoring & compliance
           </p>
         </div>
