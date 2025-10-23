@@ -12,7 +12,7 @@ import {
 import { auth } from "../firebase/firebase.init";
 
 const googleProvider = new GoogleAuthProvider();
-const API_URL = "https://abhoy-rho.vercel.app/api";
+const API_URL = "https://abhoy-server.vercel.app/api";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

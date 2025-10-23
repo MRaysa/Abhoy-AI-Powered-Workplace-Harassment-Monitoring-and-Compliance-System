@@ -190,7 +190,7 @@ const AnonymousComplaintForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://abhoy-rho.vercel.app/api/complaints", {
+      const response = await fetch("https://abhoy-server.vercel.app/api/complaints", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

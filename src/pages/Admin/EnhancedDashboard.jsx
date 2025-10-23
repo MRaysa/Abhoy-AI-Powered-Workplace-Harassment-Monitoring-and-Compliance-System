@@ -53,8 +53,8 @@ const EnhancedAdminDashboard = () => {
     try {
       setLoading(true);
       const [complaintsRes, usersRes] = await Promise.all([
-        fetch('https://abhoy-rho.vercel.app/api/complaints?limit=1000'),
-        fetch('https://abhoy-rho.vercel.app/api/users'),
+        fetch('https://abhoy-server.vercel.app/api/complaints?limit=1000'),
+        fetch('https://abhoy-server.vercel.app/api/users'),
       ]);
 
       const complaintsData = await complaintsRes.json();
@@ -87,14 +87,14 @@ const EnhancedAdminDashboard = () => {
   const handleApprove = async (complaintId) => {
     try {
       // Update status to verified (backend's "approved" equivalent)
-      const statusResponse = await fetch(`https://abhoy-rho.vercel.app/api/complaints/${complaintId}/status`, {
+      const statusResponse = await fetch(`https://abhoy-server.vercel.app/api/complaints/${complaintId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'verified' }),
       });
 
       // Approve for public forum
-      const forumResponse = await fetch(`https://abhoy-rho.vercel.app/api/complaints/${complaintId}/approve-forum`, {
+      const forumResponse = await fetch(`https://abhoy-server.vercel.app/api/complaints/${complaintId}/approve-forum`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ approved: true }),
@@ -143,14 +143,14 @@ const EnhancedAdminDashboard = () => {
   const handleReject = async (complaintId) => {
     try {
       // Update status to rejected
-      const statusResponse = await fetch(`https://abhoy-rho.vercel.app/api/complaints/${complaintId}/status`, {
+      const statusResponse = await fetch(`https://abhoy-server.vercel.app/api/complaints/${complaintId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected' }),
       });
 
       // Make sure it's NOT approved for public forum
-      const forumResponse = await fetch(`https://abhoy-rho.vercel.app/api/complaints/${complaintId}/approve-forum`, {
+      const forumResponse = await fetch(`https://abhoy-server.vercel.app/api/complaints/${complaintId}/approve-forum`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ approved: false }),

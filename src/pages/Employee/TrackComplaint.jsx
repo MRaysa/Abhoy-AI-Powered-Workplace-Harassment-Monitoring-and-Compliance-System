@@ -81,7 +81,7 @@ const TrackComplaint = () => {
 
     try {
       const response = await fetch(
-        `https://abhoy-rho.vercel.app/api/complaints/${anonymousId.trim()}`
+        `https://abhoy-server.vercel.app/api/complaints/${anonymousId.trim()}`
       );
       const result = await response.json();
 

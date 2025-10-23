@@ -38,7 +38,7 @@ const PublicForum = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://abhoy-rho.vercel.app/api/complaints/forum/posts?page=${page}&limit=10`
+        `https://abhoy-server.vercel.app/api/complaints/forum/posts?page=${page}&limit=10`
       );
       const result = await response.json();
 
@@ -62,7 +62,7 @@ const PublicForum = () => {
   const handleReaction = async (anonymousId, reactionType) => {
     try {
       const response = await fetch(
-        `https://abhoy-rho.vercel.app/api/complaints/${anonymousId}/react`,
+        `https://abhoy-server.vercel.app/api/complaints/${anonymousId}/react`,
         {
           method: "POST",
           headers: {
@@ -124,7 +124,7 @@ const PublicForum = () => {
     if (comment) {
       try {
         const response = await fetch(
-          `https://abhoy-rho.vercel.app/api/complaints/${anonymousId}/comments`,
+          `https://abhoy-server.vercel.app/api/complaints/${anonymousId}/comments`,
           {
             method: "POST",
             headers: {
