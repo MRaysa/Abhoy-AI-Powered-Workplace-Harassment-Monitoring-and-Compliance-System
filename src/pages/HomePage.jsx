@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Shield, Lock, FileText, Scale, MessageCircle, Users, ChevronRight, Check, Menu, X, ChevronDown, Award, Star, Heart } from 'lucide-react';
+import { Shield, Lock, FileText, Scale, MessageCircle, Users, ChevronRight, Check, Menu, X, ChevronDown, Award, Star, Heart, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion } from 'framer-motion';
@@ -7,116 +7,116 @@ import { motion } from 'framer-motion';
 const HomePage = () => {
   const { isDark } = useTheme();
 
-  const canvasRef = useRef(null);
+  // const canvasRef = useRef(null);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let particles = [];
+  // useEffect(() => {
+  //   const canvas = canvasRef.current;
+  //   const ctx = canvas.getContext('2d');
+  //   let animationFrameId;
+  //   let particles = [];
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
+  //   const resizeCanvas = () => {
+  //     canvas.width = window.innerWidth;
+  //     canvas.height = window.innerHeight;
+  //   };
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+  //   resizeCanvas();
+  //   window.addEventListener('resize', resizeCanvas);
 
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * 2 - 1;
-        this.opacity = Math.random() * 0.5 + 0.2;
-      }
+  //   class Particle {
+  //     constructor() {
+  //       this.x = Math.random() * canvas.width;
+  //       this.y = Math.random() * canvas.height;
+  //       this.size = Math.random() * 3 + 1;
+  //       this.speedX = Math.random() * 2 - 1;
+  //       this.speedY = Math.random() * 2 - 1;
+  //       this.opacity = Math.random() * 0.5 + 0.2;
+  //     }
 
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+  //     update() {
+  //       this.x += this.speedX;
+  //       this.y += this.speedY;
 
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
-      }
+  //       if (this.x > canvas.width) this.x = 0;
+  //       if (this.x < 0) this.x = canvas.width;
+  //       if (this.y > canvas.height) this.y = 0;
+  //       if (this.y < 0) this.y = canvas.height;
+  //     }
 
-      draw() {
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
+  //     draw() {
+  //       ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+  //       ctx.beginPath();
+  //       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+  //       ctx.fill();
+  //     }
+  //   }
 
-    for (let i = 0; i < 100; i++) {
-      particles.push(new Particle());
-    }
+  //   for (let i = 0; i < 100; i++) {
+  //     particles.push(new Particle());
+  //   }
 
-    let waveOffset = 0;
+  //   let waveOffset = 0;
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //   const animate = () => {
+  //     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Animated wave layers
-      waveOffset += 0.01;
+  //     // Animated wave layers
+  //     waveOffset += 0.01;
       
-      for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height / 2);
+  //     for (let i = 0; i < 3; i++) {
+  //       ctx.beginPath();
+  //       ctx.moveTo(0, canvas.height / 2);
         
-        for (let x = 0; x < canvas.width; x++) {
-          const y = Math.sin(x * 0.01 + waveOffset + i) * 30 + 
-                    Math.sin(x * 0.02 + waveOffset * 1.5 + i) * 20 + 
-                    canvas.height / 2 + i * 100;
-          ctx.lineTo(x, y);
-        }
+  //       for (let x = 0; x < canvas.width; x++) {
+  //         const y = Math.sin(x * 0.01 + waveOffset + i) * 30 + 
+  //                   Math.sin(x * 0.02 + waveOffset * 1.5 + i) * 20 + 
+  //                   canvas.height / 2 + i * 100;
+  //         ctx.lineTo(x, y);
+  //       }
         
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.closePath();
+  //       ctx.lineTo(canvas.width, canvas.height);
+  //       ctx.lineTo(0, canvas.height);
+  //       ctx.closePath();
         
-        const opacity = 0.03 - i * 0.01;
-        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-        ctx.fill();
-      }
+  //       const opacity = 0.03 - i * 0.01;
+  //       ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+  //       ctx.fill();
+  //     }
 
-      // Update and draw particles
-      particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
+  //     // Update and draw particles
+  //     particles.forEach(particle => {
+  //       particle.update();
+  //       particle.draw();
+  //     });
 
-      // Draw connections between nearby particles
-      particles.forEach((a, i) => {
-        particles.slice(i + 1).forEach(b => {
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+  //     // Draw connections between nearby particles
+  //     particles.forEach((a, i) => {
+  //       particles.slice(i + 1).forEach(b => {
+  //         const dx = a.x - b.x;
+  //         const dy = a.y - b.y;
+  //         const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 150) {
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / 150)})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        });
-      });
+  //         if (distance < 150) {
+  //           ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / 150)})`;
+  //           ctx.lineWidth = 0.5;
+  //           ctx.beginPath();
+  //           ctx.moveTo(a.x, a.y);
+  //           ctx.lineTo(b.x, b.y);
+  //           ctx.stroke();
+  //         }
+  //       });
+  //     });
 
-      animationFrameId = requestAnimationFrame(animate);
-    };
+  //     animationFrameId = requestAnimationFrame(animate);
+  //   };
 
-    animate();
+  //   animate();
 
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('resize', resizeCanvas);
+  //     cancelAnimationFrame(animationFrameId);
+  //   };
+  // }, []);
 
   const [email, setEmail] = useState('');
   const [statsVisible, setStatsVisible] = useState(false);
@@ -248,49 +248,363 @@ const HomePage = () => {
     }
   ];
 
+    const slides = [
+    {
+      image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop',
+      alt: 'Professional workplace environment'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop',
+      alt: 'Team collaboration'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&h=1080&fit=crop',
+      alt: 'University campus'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&h=1080&fit=crop',
+      alt: 'Support and solidarity'
+    }
+  ];
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
   return (
     <>
 
-    <div className={`transition-colors duration-300 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`transition-colors duration-300 ${isDark ? 'bg-gray-900 text-white' : 'bg-[#AFDDE5] text-gray-900'}`}>
       {/* Hero Section */}
-      <section>
-        <div className="relative w-full h-screen overflow-hidden">
-          {/* Static gradient base */}
-          <div className={`absolute inset-0 transition-all duration-500 ${isDark ? 'bg-gradient-to-br from-gray-900 via-indigo-950 to-purple-950' : 'bg-gradient-to-br from-[#617C88] to-[#F8F8F6]'}`}></div>
+    <section>
+      <div className="relative w-full h-screen overflow-hidden">
+        {/* Carousel Background */}
+        <div className="absolute inset-0">
+          {slides.map((slide, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img
+                src={slide.image}
+                alt={slide.alt}
+                className="w-full h-full object-cover"
+              />
+              {/* Overlay for better text readability */}
+              <div className={`absolute inset-0 ${
+                isDark 
+                  ? 'bg-gradient-to-br from-gray-900/80 via-indigo-950/80 to-purple-950/80' 
+                  : 'bg-gradient-to-br from-[#0FA4AF]/80 to-[#003135]/80'
+              }`}></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Carousel Controls */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
         
-          {/* Animated canvas overlay */}
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0"
-            style={{ opacity: 0.9 }}
-          />
-        
-          {/* Content area */}
-          <div className="relative z-10 flex items-center justify-center h-full">
-            <div className="text-center text-[#0B2B37]">
-              <h1 className="text-6xl font-bold mb-4 drop-shadow-lg">Break the Silence Safely - Report Harassment Anonymously</h1>
-              <p className="text-xl opacity-90 mb-8">Empower yourself and others. Secure, verified, and supported reporting for workplaces and universities.
-              </p>
-              <div className="flex gap-4 justify-center">
-                <Link
-                  to="/submit-complaint"
-                  className="bg-[#0B2B37] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#0a242f] transition transform hover:scale-105 shadow-lg flex items-center gap-2"
-                >
-                  <FileText className="w-5 h-5" />
-                  Submit Anonymous Report
-                </Link>
-                <Link
-                  to="/forum"
-                  className="bg-white text-[#0B2B37] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-lg flex items-center gap-2 border-2 border-[#0B2B37]"
-                >
-                  <Users className="w-5 h-5" />
-                  View Community Forum
-                </Link>
-              </div>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide 
+                  ? 'bg-white w-8' 
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Content area */}
+        <div className="relative z-10 flex items-center justify-center h-full px-4">
+          <div className="text-center text-white max-w-5xl">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-2xl">
+              Break the Silence Safely - Report Harassment Anonymously
+            </h1>
+            <p className="text-lg md:text-xl opacity-90 mb-8 drop-shadow-lg">
+              Empower yourself and others. Secure, verified, and supported reporting for workplaces and universities.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/submit-complaint"
+                className="bg-[#0B2B37] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#0a242f] transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+              >
+                <FileText className="w-5 h-5" />
+                Submit Anonymous Report
+              </Link>
+              <Link
+                to="/forum"
+                className="bg-white text-[#0B2B37] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 border-2 border-white"
+              >
+                <Users className="w-5 h-5" />
+                View Community Forum
+              </Link>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+    {/* About Startttttt */}
+
+{/* About Section with Animation */}
+<section id="about" className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-[#ecf8f8]'}`}>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Section Header */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-16"
+    >
+      <h2 className="text-4xl md:text-5xl font-bold mb-6">
+        About{' '}
+        <span className="text-red-700">
+          অভয় (Abhoy)
+        </span>
+      </h2>
+      <p className={`text-xl max-w-3xl mx-auto ${isDark ? 'text-gray-300' : 'text-[#003135]'}`}>
+        Breaking barriers, building safe spaces - one anonymous report at a time
+      </p>
+    </motion.div>
+
+    {/* Main Content Grid */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+      {/* Left Column - What is Abhoy */}
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className={`p-8 rounded-2xl ${
+          isDark ? 'bg-gray-800' : 'bg-white'
+        } shadow-xl relative overflow-hidden`}
+      >
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ecf8f8]/20 to-[#003135]/20 rounded-full blur-3xl"></div>
+        
+        <motion.div
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="w-16 h-16 bg-gradient-to-br from-[#0FA4AF] to-[#024950] rounded-2xl flex items-center justify-center mb-6 shadow-lg"
+        >
+          <Shield className="w-8 h-8 text-white" />
+        </motion.div>
+
+        <h3 className={`text-2xl md:text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-[#003135]'}`}>
+          What is অভয়?
+        </h3>
+        <p className={`text-lg leading-relaxed mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+          অভয় (Abhoy) means "fearless" in Bengali. We are a revolutionary platform designed to empower individuals facing harassment in workplaces and educational institutions.
+        </p>
+        <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+          Through cutting-edge anonymity technology, verified evidence systems, and a supportive community, we transform the way harassment is reported and addressed.
+        </p>
+
+        <motion.div
+          whileHover={{ x: 5 }}
+          className="mt-6 flex items-center gap-2 text-[#0FA4AF] font-semibold cursor-pointer"
+        >
+          Learn More <ChevronRight className="w-5 h-5" />
+        </motion.div>
+      </motion.div>
+
+      {/* Right Column - What We Do */}
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className={`p-8 rounded-2xl ${
+          isDark ? 'bg-gray-800' : 'bg-white'
+        } shadow-xl relative overflow-hidden`}
+      >
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tl from-[#964734]/20 to-[#0FA4AF]/20 rounded-full blur-3xl"></div>
+
+        <motion.div
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="w-16 h-16 bg-gradient-to-br from-[#024950] to-[#003135] rounded-2xl flex items-center justify-center mb-6 shadow-lg"
+        >
+          <Users className="w-8 h-8 text-white" />
+        </motion.div>
+
+        <h3 className={`text-2xl md:text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-[#003135]'}`}>
+          What We Do
+        </h3>
+        <ul className="space-y-4">
+          {[
+            'Enable 100% anonymous harassment reporting with unique ID tracking',
+            'Provide evidence-based verification through documents or witness validation',
+            'Offer instant legal guidance tailored to your country\'s harassment laws',
+            'Connect survivors with verified legal experts through secure channels',
+            'Build a supportive community forum for shared experiences and solidarity'
+          ].map((item, index) => (
+            <motion.li
+              key={index}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
+              className="flex items-start gap-3"
+            >
+              <Check className="w-6 h-6 text-[#0FA4AF] flex-shrink-0 mt-1" />
+              <span className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                {item}
+              </span>
+            </motion.li>
+          ))}
+        </ul>
+      </motion.div>
+    </div>
+
+    {/* Problem We Solve Section */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className={`p-10 rounded-2xl ${
+        isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-[#003135] to-[#024950]'
+      } shadow-2xl relative overflow-hidden`}
+    >
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#0FA4AF]/10 to-[#964734]/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#AFDDE5]/10 to-[#0FA4AF]/10 rounded-full blur-2xl"></div>
+
+      <div className="relative z-10">
+        <motion.div
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="w-20 h-20 bg-gradient-to-bl from-red-600 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl"
+        >
+          <Award className="w-10 h-10 text-white" />
+        </motion.div>
+
+        <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center text-white">
+          The Problem We Solve
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {[
+            {
+              icon: <Lock className="w-8 h-8" />,
+              title: 'Fear of Retaliation',
+              description: 'Victims stay silent due to fear of losing jobs, academic standing, or facing social backlash'
+            },
+            {
+              icon: <Scale className="w-8 h-8" />,
+              title: 'Lack of Evidence',
+              description: 'Many cases go unreported because individuals lack proof or witness support'
+            },
+            {
+              icon: <MessageCircle className="w-8 h-8" />,
+              title: 'No Safe Platform',
+              description: 'Traditional reporting systems often fail to protect identity or provide adequate support'
+            }
+          ].map((problem, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20"
+            >
+              <div className="text-[#AFDDE5] mb-4">{problem.icon}</div>
+              <h4 className="text-xl font-bold mb-3 text-white">{problem.title}</h4>
+              <p className="text-gray-300">{problem.description}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-center"
+        >
+        </motion.div>
+      </div>
+    </motion.div>
+
+    {/* Statistics Banner */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+    >
+      {[
+        { number: '85%', label: 'of harassment goes unreported' },
+        { number: '60%', label: 'fear retaliation if they speak up' },
+        { number: '72%', label: 'lack evidence to support claims' },
+        { number: '100%', label: 'anonymity with অভয়' }
+      ].map((stat, index) => (
+        <motion.div
+          key={index}
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+          whileHover={{ scale: 1.05 }}
+          className={`p-6 rounded-xl text-center ${
+            isDark ? 'bg-gray-800' : 'bg-white'
+          } shadow-lg`}
+        >
+          <div className="text-4xl font-bold bg-[#003135] bg-clip-text text-transparent mb-2">
+            {stat.number}
+          </div>
+          <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            {stat.label}
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+</section>
         {/* Feature Section */}
         <section id="features" className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -331,7 +645,7 @@ const HomePage = () => {
           </div>
         </section>
               {/* How It Works Section */}
-        <section id="how-it-works" className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+        <section id="how-it-works" className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-[#ecf8f8]'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">How It Works</h2>
@@ -412,7 +726,7 @@ const HomePage = () => {
                     {/* Star rating */}
                     <div className="flex mb-6">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                        <Star key={i} className="w-5 h-5 text-red-700 fill-red-700" />
                       ))}
                     </div>
 
@@ -421,7 +735,7 @@ const HomePage = () => {
                     </p>
 
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#003135] to-[#024950] flex items-center justify-center text-white font-bold text-lg shadow-lg">
                         {testimonial.author[0]}
                       </div>
                       <div>
@@ -455,7 +769,7 @@ const HomePage = () => {
         </section>
 
         {/* FAQ Section - Accordion Style */}
-        <section id="faq" className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-gradient-to-b from-gray-50 to-white'}`}>
+        <section id="faq" className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-gradient-to-b from-[#ecf8f8] to-white'}`}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -465,7 +779,7 @@ const HomePage = () => {
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 Frequently Asked{' '}
-                <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
                   Questions
                 </span>
               </h2>
@@ -537,7 +851,7 @@ const HomePage = () => {
                 className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
                   isDark
                     ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    : 'bg-[#024950] text-white hover:bg-[#003135]'
                 }`}
               >
                 <MessageCircle className="w-5 h-5" />
@@ -568,7 +882,7 @@ const HomePage = () => {
                 </div>
               </div>
               <div className={`p-10 rounded-2xl shadow-2xl ${
-                isDark ? 'bg-gray-800' : 'bg-gradient-to-br from-indigo-50 to-purple-50'
+                isDark ? 'bg-gray-800' : 'bg-gradient-to-br from-indigo-50 to-[#AFDDE5]'
               } relative overflow-hidden`}>
                 {/* Decorative elements */}
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
@@ -588,7 +902,7 @@ const HomePage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className={`w-full px-6 py-4 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      className={`w-full px-6 py-4 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 focus:[#003135] ${
                         isDark
                           ? 'bg-gray-900 border-gray-700 text-white placeholder-gray-500'
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -598,7 +912,7 @@ const HomePage = () => {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleNewsletterSubmit}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl transition-all flex items-center justify-center gap-2"
+                      className="w-full px-6 py-4 bg-gradient-to-r from-[#003135] via-[#024950] to-[#003135] text-white rounded-xl font-bold text-lg hover:shadow-2xl transition-all flex items-center justify-center gap-2"
                     >
                       <Heart className="w-5 h-5" />
                       Join Our Mission

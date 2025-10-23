@@ -10,6 +10,8 @@ import {
   FaImage,
   FaPhone,
   FaMapMarkerAlt,
+  FaVolumeUp,
+  FaVolumeMute,
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -36,6 +38,17 @@ const SignUp = () => {
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState(null);
   const [useImageUrl, setUseImageUrl] = useState(false);
+  const [speakingField, setSpeakingField] = useState(null);
+
+  // Bengali voice instructions for each field
+  const voiceInstructions = {
+    name: "Eikhane apnar puro naam likhun",
+    email: "Eikhane apnar email address likhun",
+    password: "Eikhane ekti strong password likhun. Password e kom poke 6 ta character thakte hobe, boro hater o choto hater letter thakte hobe ebong number o thakte hobe",
+    phone: "Eikhane apnar phone number likhun",
+    address: "Eikhane apnar thikana likhun",
+    photo: "Eikhane apnar profile picture upload korun ba image URL diye din"
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -71,6 +84,32 @@ const SignUp = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const speakInstruction = (field) => {
+    // Stop any currently speaking
+    window.speechSynthesis.cancel();
+    
+    if (speakingField === field) {
+      // If clicking the same field, stop speaking
+      setSpeakingField(null);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(voiceInstructions[field]);
+    utterance.lang = 'bn-BD'; // Bengali language
+    utterance.rate = 0.9; // Slightly slower for clarity
+    
+    utterance.onend = () => {
+      setSpeakingField(null);
+    };
+    
+    utterance.onerror = () => {
+      setSpeakingField(null);
+    };
+    
+    setSpeakingField(field);
+    window.speechSynthesis.speak(utterance);
   };
 
   const isValidUrl = (url) => {
@@ -213,63 +252,105 @@ const SignUp = () => {
       });
     }
   };
+
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${
-      isDark
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
-        : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
-    }`}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-20 " style={{ backgroundColor: isDark ? '#1a1a1a' : '#ecf8f8' }}>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden ${
-          isDark ? 'bg-gray-800' : 'bg-white'
-        }`}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-md rounded-2xl shadow-xl overflow-hidden"
+        style={{ backgroundColor: isDark ? '#2d2d2d' : '#ffffff' }}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-white opacity-10">
-            <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-1/2 translate-y-1/2 opacity-20"></div>
+        <div className="p-8 text-center relative overflow-hidden" style={{ background: isDark ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' : 'linear-gradient(135deg, #024950 0%, #003135 100%)' }}>
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-32 h-32 rounded-full -translate-x-1/2 -translate-y-1/2" style={{ backgroundColor: '#AFDDE5' }}></div>
+            <div className="absolute bottom-0 right-0 w-24 h-24 rounded-full translate-x-1/2 translate-y-1/2" style={{ backgroundColor: '#AFDDE5' }}></div>
           </div>
           <div className="relative">
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-lg"
+              className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 shadow-lg"
+              style={{ backgroundColor: '#AFDDE5' }}
             >
-              <span className="text-indigo-600 font-bold text-3xl">অ</span>
+              <span className="font-bold text-3xl" style={{ color: '#003135' }}>অ</span>
             </motion.div>
-            <h1 className="text-3xl font-bold text-white">Join অভয়</h1>
-            <p className="text-indigo-100 mt-2">Create your workplace safety account</p>
+            <motion.h1 
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="text-3xl font-bold text-white mb-2"
+            >
+              Join অভয়
+            </motion.h1>
+            <motion.p 
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="text-sm"
+              style={{ color: '#AFDDE5' }}
+            >
+              Create your workplace safety account
+            </motion.p>
           </div>
         </div>
 
         {/* Error Message */}
         {errors.firebase && (
-          <div className="px-8 pt-6">
-            <div className={`border-l-4 p-4 ${
-              isDark
-                ? 'bg-red-900/50 border-red-500 text-red-200'
-                : 'bg-red-100 border-red-500 text-red-700'
-            }`}>
-              <p>{errors.firebase}</p>
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="mx-8 mt-6"
+          >
+            <div className="border-l-4 p-4 rounded-r-lg" style={{ backgroundColor: isDark ? 'rgba(150, 71, 52, 0.2)' : '#fff5f5', borderColor: '#964734' }}>
+              <p className="text-sm" style={{ color: isDark ? '#ff9999' : '#964734' }}>{errors.firebase}</p>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-4">
+        <div className="p-8 space-y-4">
           {/* Profile Picture Section */}
-          <div className="flex flex-col items-center space-y-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            className="flex flex-col items-center space-y-2"
+          >
+            <div className="w-full flex items-center justify-between mb-2">
+              <span className="text-sm font-medium" style={{ color: isDark ? '#AFDDE5' : '#003135' }}>
+                Profile Picture
+              </span>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="button"
+                onClick={() => speakInstruction('photo')}
+                className="p-2 rounded-full transition-all duration-200"
+                style={{ 
+                  backgroundColor: speakingField === 'photo' ? (isDark ? '#4d4d4d' : '#AFDDE5') : 'transparent',
+                  color: speakingField === 'photo' ? (isDark ? '#AFDDE5' : '#003135') : (isDark ? '#666' : '#024950')
+                }}
+              >
+                {speakingField === 'photo' ? (
+                  <FaVolumeUp className="text-lg" />
+                ) : (
+                  <FaVolumeMute className="text-lg" />
+                )}
+              </motion.button>
+            </div>
             <div className="relative">
-              <div className={`w-24 h-24 rounded-full flex items-center justify-center overflow-hidden border-2 ${
-                isDark
-                  ? 'bg-gray-700 border-gray-600'
-                  : 'bg-gray-200 border-indigo-100'
-              }`}>
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden border-2 shadow-md"
+                style={{ 
+                  backgroundColor: isDark ? '#3d3d3d' : '#f0f0f0',
+                  borderColor: isDark ? '#666' : '#AFDDE5'
+                }}
+              >
                 {imagePreview ? (
                   <img
                     src={imagePreview}
@@ -277,11 +358,9 @@ const SignUp = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <FaImage className={`text-3xl ${
-                    isDark ? 'text-gray-500' : 'text-gray-400'
-                  }`} />
+                  <FaImage className="text-3xl" style={{ color: isDark ? '#666' : '#AFDDE5' }} />
                 )}
-              </div>
+              </motion.div>
             </div>
 
             <div className="w-full">
@@ -293,10 +372,12 @@ const SignUp = () => {
                   checked={!useImageUrl}
                   onChange={() => setUseImageUrl(false)}
                   className="mr-2"
+                  style={{ accentColor: isDark ? '#AFDDE5' : '#024950' }}
                 />
                 <label
                   htmlFor="upload-option"
-                  className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                  className="text-sm"
+                  style={{ color: isDark ? '#ccc' : '#003135' }}
                 >
                   Upload Image
                 </label>
@@ -309,13 +390,27 @@ const SignUp = () => {
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="block w-full text-sm text-gray-500
+                    className="block w-full text-sm
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-md file:border-0
                       file:text-sm file:font-semibold
-                      file:bg-indigo-50 file:text-indigo-700
-                      hover:file:bg-indigo-100"
+                      file:transition-all file:duration-200"
+                    style={{
+                      color: isDark ? '#ccc' : '#666',
+                      '--file-bg': isDark ? '#3d3d3d' : '#ecf8f8',
+                      '--file-text': isDark ? '#AFDDE5' : '#003135',
+                      '--file-hover-bg': isDark ? '#4d4d4d' : '#AFDDE5'
+                    }}
                   />
+                  <style>{`
+                    input[type="file"]::file-selector-button {
+                      background-color: ${isDark ? '#3d3d3d' : '#ecf8f8'};
+                      color: ${isDark ? '#AFDDE5' : '#003135'};
+                    }
+                    input[type="file"]::file-selector-button:hover {
+                      background-color: ${isDark ? '#4d4d4d' : '#AFDDE5'};
+                    }
+                  `}</style>
                 </label>
               )}
 
@@ -327,8 +422,9 @@ const SignUp = () => {
                   checked={useImageUrl}
                   onChange={() => setUseImageUrl(true)}
                   className="mr-2"
+                  style={{ accentColor: isDark ? '#AFDDE5' : '#024950' }}
                 />
-                <label htmlFor="url-option" className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                <label htmlFor="url-option" className="text-sm" style={{ color: isDark ? '#ccc' : '#003135' }}>
                   Use Image URL
                 </label>
               </div>
@@ -341,99 +437,171 @@ const SignUp = () => {
                     value={formData.photoURL}
                     onChange={handleImageUrlChange}
                     placeholder="https://example.com/image.jpg"
-                    className={`w-full px-3 py-2 border rounded-md text-sm shadow-sm ${
-                      errors.photoURL
-                        ? "border-red-500"
-                        : isDark
-                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                          : "border-gray-300 bg-white"
-                    }`}
+                    className="w-full px-3 py-2 border-2 rounded-md text-sm shadow-sm transition-all duration-200 focus:outline-none"
+                    style={{
+                      borderColor: errors.photoURL ? '#964734' : (isDark ? '#444' : '#AFDDE5'),
+                      backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                      color: isDark ? '#fff' : '#003135'
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+                    onBlur={(e) => e.target.style.borderColor = errors.photoURL ? '#964734' : (isDark ? '#444' : '#AFDDE5')}
                   />
                   {errors.photoURL && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs mt-1" style={{ color: '#964734' }}>
                       {errors.photoURL}
                     </p>
                   )}
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Name Field */}
-          <div className="space-y-1">
-            <label
-              htmlFor="name"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
-            >
-              <FaUser className="mr-2 text-indigo-500" />
-              Full Name
-            </label>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="space-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="name"
+                className="flex items-center text-sm font-medium"
+                style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              >
+                <FaUser className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
+                Full Name
+              </label>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="button"
+                onClick={() => speakInstruction('name')}
+                className="p-1 rounded-full transition-all duration-200"
+                style={{ 
+                  backgroundColor: speakingField === 'name' ? (isDark ? '#4d4d4d' : '#AFDDE5') : 'transparent',
+                  color: speakingField === 'name' ? (isDark ? '#AFDDE5' : '#003135') : (isDark ? '#666' : '#024950')
+                }}
+              >
+                {speakingField === 'name' ? (
+                  <FaVolumeUp className="text-sm" />
+                ) : (
+                  <FaVolumeMute className="text-sm" />
+                )}
+              </motion.button>
+            </div>
             <input
               id="name"
               name="name"
               type="text"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                errors.name
-                  ? "border-red-500"
-                  : isDark
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "border-gray-300 bg-white"
-              }`}
+              className="w-full px-4 py-2 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+              style={{
+                borderColor: errors.name ? '#964734' : (isDark ? '#444' : '#AFDDE5'),
+                backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                color: isDark ? '#fff' : '#003135'
+              }}
+              onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+              onBlur={(e) => e.target.style.borderColor = errors.name ? '#964734' : (isDark ? '#444' : '#AFDDE5')}
               placeholder="John Doe"
               required
             />
             {errors.name && (
-              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              <p className="text-xs mt-1" style={{ color: '#964734' }}>{errors.name}</p>
             )}
-          </div>
+          </motion.div>
 
           {/* Email Field */}
-          <div className="space-y-1">
-            <label
-              htmlFor="email"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
-            >
-              <FaEnvelope className="mr-2 text-indigo-500" />
-              Email Address
-            </label>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65, duration: 0.4 }}
+            className="space-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="email"
+                className="flex items-center text-sm font-medium"
+                style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              >
+                <FaEnvelope className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
+                Email Address
+              </label>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="button"
+                onClick={() => speakInstruction('email')}
+                className="p-1 rounded-full transition-all duration-200"
+                style={{ 
+                  backgroundColor: speakingField === 'email' ? (isDark ? '#4d4d4d' : '#AFDDE5') : 'transparent',
+                  color: speakingField === 'email' ? (isDark ? '#AFDDE5' : '#003135') : (isDark ? '#666' : '#024950')
+                }}
+              >
+                {speakingField === 'email' ? (
+                  <FaVolumeUp className="text-sm" />
+                ) : (
+                  <FaVolumeMute className="text-sm" />
+                )}
+              </motion.button>
+            </div>
             <input
               id="email"
               name="email"
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                errors.email
-                  ? "border-red-500"
-                  : isDark
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "border-gray-300 bg-white"
-              }`}
+              className="w-full px-4 py-2 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+              style={{
+                borderColor: errors.email ? '#964734' : (isDark ? '#444' : '#AFDDE5'),
+                backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                color: isDark ? '#fff' : '#003135'
+              }}
+              onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+              onBlur={(e) => e.target.style.borderColor = errors.email ? '#964734' : (isDark ? '#444' : '#AFDDE5')}
               placeholder="your@email.com"
               required
             />
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              <p className="text-xs mt-1" style={{ color: '#964734' }}>{errors.email}</p>
             )}
-          </div>
+          </motion.div>
 
           {/* Password Field */}
-          <div className="space-y-1">
-            <label
-              htmlFor="password"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
-            >
-              <FaLock className="mr-2 text-indigo-500" />
-              Password
-            </label>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.4 }}
+            className="space-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="flex items-center text-sm font-medium"
+                style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              >
+                <FaLock className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
+                Password
+              </label>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="button"
+                onClick={() => speakInstruction('password')}
+                className="p-1 rounded-full transition-all duration-200"
+                style={{ 
+                  backgroundColor: speakingField === 'password' ? (isDark ? '#4d4d4d' : '#AFDDE5') : 'transparent',
+                  color: speakingField === 'password' ? (isDark ? '#AFDDE5' : '#003135') : (isDark ? '#666' : '#024950')
+                }}
+              >
+                {speakingField === 'password' ? (
+                  <FaVolumeUp className="text-sm" />
+                ) : (
+                  <FaVolumeMute className="text-sm" />
+                )}
+              </motion.button>
+            </div>
             <div className="relative">
               <input
                 id="password"
@@ -441,126 +609,182 @@ const SignUp = () => {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                  errors.password
-                    ? "border-red-500"
-                    : isDark
-                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                      : "border-gray-300 bg-white"
-                }`}
+                className="w-full px-4 py-2 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+                style={{
+                  borderColor: errors.password ? '#964734' : (isDark ? '#444' : '#AFDDE5'),
+                  backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                  color: isDark ? '#fff' : '#003135'
+                }}
+                onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+                onBlur={(e) => e.target.style.borderColor = errors.password ? '#964734' : (isDark ? '#444' : '#AFDDE5')}
                 placeholder="••••••••"
                 required
               />
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 type="button"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <FaEyeSlash className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                  <FaEyeSlash style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
                 ) : (
-                  <FaEye className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                  <FaEye style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
                 )}
-              </button>
+              </motion.button>
             </div>
             {errors.password ? (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+              <p className="text-xs mt-1" style={{ color: '#964734' }}>{errors.password}</p>
             ) : (
-              <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="text-xs mt-1" style={{ color: isDark ? '#888' : '#666' }}>
                 Must be at least 6 characters with uppercase, lowercase, and number
               </p>
             )}
-          </div>
+          </motion.div>
 
           {/* Phone Number Field */}
-          <div className="space-y-1">
-            <label
-              htmlFor="phone"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
-            >
-              <FaPhone className="mr-2 text-indigo-500" />
-              Phone Number
-            </label>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75, duration: 0.4 }}
+            className="space-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="phone"
+                className="flex items-center text-sm font-medium"
+                style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              >
+                <FaPhone className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
+                Phone Number
+              </label>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="button"
+                onClick={() => speakInstruction('phone')}
+                className="p-1 rounded-full transition-all duration-200"
+                style={{ 
+                  backgroundColor: speakingField === 'phone' ? (isDark ? '#4d4d4d' : '#AFDDE5') : 'transparent',
+                  color: speakingField === 'phone' ? (isDark ? '#AFDDE5' : '#003135') : (isDark ? '#666' : '#024950')
+                }}
+              >
+                {speakingField === 'phone' ? (
+                  <FaVolumeUp className="text-sm" />
+                ) : (
+                  <FaVolumeMute className="text-sm" />
+                )}
+              </motion.button>
+            </div>
             <input
               id="phone"
               name="phone"
               type="tel"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                errors.phone
-                  ? "border-red-500"
-                  : isDark
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "border-gray-300 bg-white"
-              }`}
+              className="w-full px-4 py-2 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+              style={{
+                borderColor: errors.phone ? '#964734' : (isDark ? '#444' : '#AFDDE5'),
+                backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                color: isDark ? '#fff' : '#003135'
+              }}
+              onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+              onBlur={(e) => e.target.style.borderColor = errors.phone ? '#964734' : (isDark ? '#444' : '#AFDDE5')}
               placeholder="1234567890"
             />
             {errors.phone && (
-              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+              <p className="text-xs mt-1" style={{ color: '#964734' }}>{errors.phone}</p>
             )}
-          </div>
+          </motion.div>
 
           {/* Address Field */}
-          <div className="space-y-1">
-            <label
-              htmlFor="address"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
-            >
-              <FaMapMarkerAlt className="mr-2 text-indigo-500" />
-              Address
-            </label>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.4 }}
+            className="space-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="address"
+                className="flex items-center text-sm font-medium"
+                style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              >
+                <FaMapMarkerAlt className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
+                Address
+              </label>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="button"
+                onClick={() => speakInstruction('address')}
+                className="p-1 rounded-full transition-all duration-200"
+                style={{ 
+                  backgroundColor: speakingField === 'address' ? (isDark ? '#4d4d4d' : '#AFDDE5') : 'transparent',
+                  color: speakingField === 'address' ? (isDark ? '#AFDDE5' : '#003135') : (isDark ? '#666' : '#024950')
+                }}
+              >
+                {speakingField === 'address' ? (
+                  <FaVolumeUp className="text-sm" />
+                ) : (
+                  <FaVolumeMute className="text-sm" />
+                )}
+              </motion.button>
+            </div>
             <textarea
               id="address"
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                isDark
-                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                  : "border-gray-300 bg-white"
-              }`}
+              className="w-full px-4 py-2 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+              style={{
+                borderColor: isDark ? '#444' : '#AFDDE5',
+                backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                color: isDark ? '#fff' : '#003135'
+              }}
+              onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+              onBlur={(e) => e.target.style.borderColor = isDark ? '#444' : '#AFDDE5'}
               placeholder="123 Main St, City, Country"
               rows="2"
             />
-          </div>
+          </motion.div>
 
           {/* Submit Button */}
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className={`w-full py-3 px-4 mt-4 rounded-lg text-white font-semibold ${
-              loading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-            } transition-all shadow-lg hover:shadow-xl`}
+            onClick={handleSubmit}
+            className="w-full py-3 px-4 mt-4 rounded-lg text-white font-semibold transition-all duration-300 shadow-lg"
+            style={{ 
+              backgroundColor: loading ? (isDark ? '#666' : '#AFDDE5') : (isDark ? '#AFDDE5' : '#003135'),
+              color: loading ? '#fff' : (isDark ? '#003135' : '#fff'),
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer'
+            }}
           >
             {loading ? (
               <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={{ color: isDark ? '#003135' : '#fff' }}>
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 Creating Account...
               </span>
-            ) : "Create অভয় Account"}
+            ) : (
+              "Create অভয় Account"
+            )}
           </motion.button>
 
           {/* Divider */}
-          <div className="relative my-4">
+          <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
-              <div className={`w-full border-t ${
-                isDark ? 'border-gray-600' : 'border-gray-300'
-              }`}></div>
+              <div className="w-full border-t" style={{ borderColor: isDark ? '#444' : '#AFDDE5' }}></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className={`px-3 ${
-                isDark ? 'bg-gray-800 text-gray-400' : 'bg-white text-gray-500'
-              }`}>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3" style={{ backgroundColor: isDark ? '#2d2d2d' : '#ffffff', color: isDark ? '#AFDDE5' : '#024950' }}>
                 Or sign up with
               </span>
             </div>
@@ -568,41 +792,37 @@ const SignUp = () => {
 
           {/* Google Signup Button */}
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={handleGoogleRegister}
-            className={`w-full flex items-center justify-center gap-3 py-3 px-4 border-2 rounded-lg transition-all font-medium ${
-              isDark
-                ? 'border-gray-600 hover:bg-gray-700 hover:border-gray-500 text-gray-200'
-                : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700'
-            }`}
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 rounded-lg transition-all duration-200 shadow-sm font-medium"
+            style={{ 
+              borderColor: isDark ? '#444' : '#AFDDE5',
+              backgroundColor: isDark ? '#3d3d3d' : '#fff',
+              color: isDark ? '#fff' : '#003135'
+            }}
           >
-            <FaGoogle className="text-red-500 text-xl" />
+            <FaGoogle className="text-xl" style={{ color: '#964734' }} />
             <span>Sign up with Google</span>
           </motion.button>
-        </form>
+        </div>
 
         {/* Footer */}
-        <div className={`px-8 py-5 text-center border-t ${
-          isDark
-            ? 'bg-gradient-to-r from-gray-700 to-gray-700 border-gray-700'
-            : 'bg-gradient-to-r from-gray-50 to-indigo-50 border-gray-200'
-        }`}>
-          <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+        <div className="px-8 py-5 text-center" style={{ backgroundColor: isDark ? '#1a1a1a' : '#ecf8f8' }}>
+          <p className="text-sm" style={{ color: isDark ? '#ccc' : '#024950' }}>
             Already have an account?{" "}
             <Link
               to="/signin"
-              className={`font-semibold hover:underline transition ${
-                isDark
-                  ? 'text-indigo-400 hover:text-indigo-300'
-                  : 'text-indigo-600 hover:text-indigo-700'
-              }`}
+              className="font-semibold transition-all duration-200"
+              style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              onMouseEnter={(e) => e.target.style.transform = 'translateX(2px)'}
+              onMouseLeave={(e) => e.target.style.transform = 'translateX(0)'}
             >
               Sign in
             </Link>
           </p>
-          <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+          <p className="text-xs mt-2" style={{ color: isDark ? '#888' : '#024950', opacity: 0.8 }}>
             Secure workplace harassment monitoring & compliance
           </p>
         </div>

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../contexts/ThemeContext"; 
 import {
   FaUser,
   FaSignOutAlt,
@@ -53,25 +53,42 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`${isDark ? 'bg-[#1a2332]' : 'bg-gradient-to-r from-[#F8F8F6]'} ${isDark ? 'text-white' : 'text-[#0B2B37]'} shadow-lg transition-colors duration-300`}>
+    <nav className={`${isDark ? 'bg-[#1a2332]' : 'bg-[#AFDDE590] '} ${isDark ? 'text-white' : 'text-[#0B2B37]'} shadow-lg transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center">
               <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{
+                  boxShadow: [
+                    "0 0 0px rgba(97, 124, 136, 0)",
+                    "0 0 20px rgba(97, 124, 136, 0.4)",
+                    "0 0 0px rgba(97, 124, 136, 0)"
+                  ]
+                }}
+                transition={{
+                  boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                  scale: { duration: 0.2 }
+                }}
                 className="h-8 w-8 bg-[#617C88] rounded-full flex items-center justify-center mr-2"
               >
-                <span className="text-[#D5E6EE] font-bold text-xl">অ</span>
+                <motion.span
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="text-[#D5E6EE] font-bold text-xl"
+                >
+                  অ
+                </motion.span>
               </motion.div>
               <span className={`font-bold text-xl hidden sm:inline ${isDark ? 'text-white' : 'text-[#0B2B37]'}`}>
-                অভয়
+                ভয়
               </span>
             </Link>
           </div>
-
+{/* Nav */}
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
