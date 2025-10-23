@@ -20,8 +20,10 @@ import {
   Send
 } from "lucide-react";
 import Swal from "sweetalert2";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const AnonymousComplaintForm = () => {
+  const { isDark } = useTheme();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [anonymousId, setAnonymousId] = useState(null);
@@ -283,12 +285,12 @@ const AnonymousComplaintForm = () => {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded">
+            <div className={`border-l-4 border-indigo-500 p-4 rounded ${isDark ? 'bg-indigo-900/30' : 'bg-indigo-50'}`}>
               <div className="flex items-start">
-                <Shield className="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" />
+                <Shield className={`w-6 h-6 mr-3 flex-shrink-0 mt-0.5 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
                 <div>
-                  <h3 className="font-semibold text-indigo-900">Your Identity is Protected</h3>
-                  <p className="text-sm text-indigo-700 mt-1">
+                  <h3 className={`font-semibold ${isDark ? 'text-indigo-300' : 'text-indigo-900'}`}>Your Identity is Protected</h3>
+                  <p className={`text-sm mt-1 ${isDark ? 'text-indigo-400' : 'text-indigo-700'}`}>
                     This complaint will be submitted anonymously. You'll receive a unique ID to track your case.
                   </p>
                 </div>
@@ -297,7 +299,7 @@ const AnonymousComplaintForm = () => {
 
             {/* Title */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Complaint Title *
               </label>
               <input
@@ -306,14 +308,16 @@ const AnonymousComplaintForm = () => {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Brief title for your complaint"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
                 required
               />
             </div>
 
             {/* Incident Type */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Type of Incident *
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -326,12 +330,12 @@ const AnonymousComplaintForm = () => {
                     onClick={() => setFormData(prev => ({ ...prev, incidentType: type.value }))}
                     className={`p-4 rounded-lg border-2 transition-all text-left ${
                       formData.incidentType === type.value
-                        ? "border-indigo-500 bg-indigo-50 shadow-md"
-                        : "border-gray-200 hover:border-indigo-300"
+                        ? `border-indigo-500 shadow-md ${isDark ? 'bg-indigo-900/30' : 'bg-indigo-50'}`
+                        : `${isDark ? 'border-gray-600 hover:border-indigo-400 bg-gray-700/50' : 'border-gray-200 hover:border-indigo-300'}`
                     }`}
                   >
                     <div className="text-2xl mb-2">{type.icon}</div>
-                    <div className="font-medium text-sm">{type.label}</div>
+                    <div className={`font-medium text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{type.label}</div>
                   </motion.button>
                 ))}
               </div>
@@ -339,14 +343,16 @@ const AnonymousComplaintForm = () => {
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Where did this occur? *
               </label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                }`}
                 required
               >
                 <option value="">Select category</option>
@@ -360,7 +366,7 @@ const AnonymousComplaintForm = () => {
 
             {/* Priority */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Severity Level *
               </label>
               <div className="grid grid-cols-4 gap-3">
@@ -374,7 +380,7 @@ const AnonymousComplaintForm = () => {
                     className={`p-3 rounded-lg border-2 transition-all ${
                       formData.priority === priority.value
                         ? `${priority.color} text-white border-transparent`
-                        : "border-gray-200 hover:border-gray-400"
+                        : isDark ? "border-gray-600 hover:border-gray-500 bg-gray-700/50 text-gray-300" : "border-gray-200 hover:border-gray-400"
                     }`}
                   >
                     <div className="font-semibold text-sm">{priority.label}</div>
@@ -395,7 +401,7 @@ const AnonymousComplaintForm = () => {
           >
             {/* Date */}
             <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+              <label className={`flex items-center text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <Calendar className="w-4 h-4 mr-2" />
                 When did this happen? *
               </label>
@@ -405,14 +411,16 @@ const AnonymousComplaintForm = () => {
                 value={formData.incidentDate}
                 onChange={handleChange}
                 max={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                }`}
                 required
               />
             </div>
 
             {/* Location */}
             <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+              <label className={`flex items-center text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <MapPin className="w-4 h-4 mr-2" />
                 Location (Optional)
               </label>
@@ -422,16 +430,18 @@ const AnonymousComplaintForm = () => {
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="e.g., Office Building A, Floor 3, Meeting Room"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                 Be as specific as you're comfortable sharing
               </p>
             </div>
 
             {/* Description */}
             <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+              <label className={`flex items-center text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <FileText className="w-4 h-4 mr-2" />
                 Detailed Description *
               </label>
@@ -446,7 +456,9 @@ const AnonymousComplaintForm = () => {
 • What was said or done
 • How it made you feel
 • Any previous incidents"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
                 required
               />
               <div className="flex justify-between items-center mt-2">
@@ -471,10 +483,10 @@ const AnonymousComplaintForm = () => {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+            <div className={`border-l-4 border-yellow-500 p-4 rounded ${isDark ? 'bg-yellow-900/30' : 'bg-yellow-50'}`}>
               <div className="flex items-start">
-                <Info className="w-5 h-5 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-yellow-800">
+                <Info className={`w-5 h-5 mr-3 flex-shrink-0 mt-0.5 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                <p className={`text-sm ${isDark ? 'text-yellow-300' : 'text-yellow-800'}`}>
                   This information is optional but helps us investigate better. You can skip this step.
                 </p>
               </div>
@@ -482,7 +494,7 @@ const AnonymousComplaintForm = () => {
 
             {/* Accused Person */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Person(s) Involved (Optional)
               </label>
               <input
@@ -491,13 +503,15 @@ const AnonymousComplaintForm = () => {
                 value={formData.accusedPerson}
                 onChange={handleChange}
                 placeholder="Name or description of the person"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
 
             {/* Department */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Department/Division (Optional)
               </label>
               <input
@@ -506,13 +520,15 @@ const AnonymousComplaintForm = () => {
                 value={formData.accusedDepartment}
                 onChange={handleChange}
                 placeholder="e.g., Sales, HR, Engineering"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
 
             {/* Witnesses */}
             <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+              <label className={`flex items-center text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <Users className="w-4 h-4 mr-2" />
                 Witness Names (Optional)
               </label>
@@ -522,7 +538,9 @@ const AnonymousComplaintForm = () => {
                 onChange={handleChange}
                 rows="3"
                 placeholder="Names of any witnesses (one per line)"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
           </motion.div>
@@ -536,12 +554,12 @@ const AnonymousComplaintForm = () => {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+            <div className={`border-l-4 border-red-500 p-4 rounded ${isDark ? 'bg-red-900/30' : 'bg-red-50'}`}>
               <div className="flex items-start">
-                <AlertCircle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0 mt-0.5" />
+                <AlertCircle className={`w-5 h-5 mr-3 flex-shrink-0 mt-0.5 ${isDark ? 'text-red-400' : 'text-red-600'}`} />
                 <div>
-                  <h3 className="font-semibold text-red-900 mb-1">Evidence Required</h3>
-                  <p className="text-sm text-red-800">
+                  <h3 className={`font-semibold mb-1 ${isDark ? 'text-red-300' : 'text-red-900'}`}>Evidence Required</h3>
+                  <p className={`text-sm ${isDark ? 'text-red-300' : 'text-red-800'}`}>
                     To prevent false accusations, please provide supporting evidence OR collect witness verification.
                   </p>
                 </div>
@@ -550,11 +568,13 @@ const AnonymousComplaintForm = () => {
 
             {/* File Upload */}
             <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+              <label className={`flex items-center text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <Camera className="w-4 h-4 mr-2" />
                 Upload Evidence Files
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors cursor-pointer">
+              <div className={`border-2 border-dashed rounded-lg p-6 text-center hover:border-indigo-400 transition-colors cursor-pointer ${
+                isDark ? 'border-gray-600 bg-gray-700/50' : 'border-gray-300'
+              }`}>
                 <input
                   type="file"
                   id="file-upload"
@@ -564,11 +584,11 @@ const AnonymousComplaintForm = () => {
                   className="hidden"
                 />
                 <label htmlFor="file-upload" className="cursor-pointer">
-                  <Upload className="w-12 h-12 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm font-medium text-gray-700">
+                  <Upload className={`w-12 h-12 mx-auto mb-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     Click to upload or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                     Photos, videos, audio, or documents
                   </p>
                 </label>
@@ -578,10 +598,10 @@ const AnonymousComplaintForm = () => {
               {formData.evidenceFiles.length > 0 && (
                 <div className="mt-3 space-y-2">
                   {formData.evidenceFiles.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                    <div key={index} className={`flex items-center justify-between p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                       <div className="flex items-center">
-                        <FileText className="w-4 h-4 text-gray-500 mr-2" />
-                        <span className="text-sm">{file.name}</span>
+                        <FileText className={`w-4 h-4 mr-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{file.name}</span>
                       </div>
                       <button
                         type="button"
@@ -598,14 +618,16 @@ const AnonymousComplaintForm = () => {
 
             {/* URL Evidence */}
             <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+              <label className={`flex items-center text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 <Link2 className="w-4 h-4 mr-2" />
                 Evidence Links
               </label>
               <button
                 type="button"
                 onClick={addEvidenceUrl}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-indigo-400 transition-colors text-left text-gray-600"
+                className={`w-full px-4 py-3 border-2 rounded-lg hover:border-indigo-400 transition-colors text-left ${
+                  isDark ? 'border-gray-600 text-gray-400 bg-gray-700/50' : 'border-gray-300 text-gray-600'
+                }`}
               >
                 + Add Google Drive, Dropbox, or other URL
               </button>
@@ -613,10 +635,10 @@ const AnonymousComplaintForm = () => {
               {formData.evidenceUrls.length > 0 && (
                 <div className="mt-3 space-y-2">
                   {formData.evidenceUrls.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                    <div key={index} className={`flex items-center justify-between p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                       <div className="flex items-center overflow-hidden">
-                        <Link2 className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
-                        <span className="text-sm truncate">{item.url}</span>
+                        <Link2 className={`w-4 h-4 mr-2 flex-shrink-0 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className={`text-sm truncate ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.url}</span>
                       </div>
                       <button
                         type="button"
@@ -632,10 +654,10 @@ const AnonymousComplaintForm = () => {
             </div>
 
             {/* Witness Form */}
-            <div className="border-t pt-6">
-              <div className="bg-blue-50 p-4 rounded-lg mb-3">
-                <h3 className="font-semibold text-blue-900 mb-2">OR Collect Witness Verification</h3>
-                <p className="text-sm text-blue-800">
+            <div className={`border-t pt-6 ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className={`p-4 rounded-lg mb-3 ${isDark ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
+                <h3 className={`font-semibold mb-2 ${isDark ? 'text-blue-300' : 'text-blue-900'}`}>OR Collect Witness Verification</h3>
+                <p className={`text-sm ${isDark ? 'text-blue-300' : 'text-blue-800'}`}>
                   Create a Google Form and collect at least 5 witness responses. Paste the form URL below.
                 </p>
               </div>
@@ -645,7 +667,9 @@ const AnonymousComplaintForm = () => {
                 value={formData.witnessFormUrl}
                 onChange={handleChange}
                 placeholder="Google Form URL for witness verification"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                }`}
               />
             </div>
           </motion.div>
@@ -666,11 +690,11 @@ const AnonymousComplaintForm = () => {
               <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-6" />
             </motion.div>
 
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            <h2 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
               Complaint Submitted Successfully!
             </h2>
 
-            <p className="text-gray-600 mb-8">
+            <p className={`mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               Your complaint has been received and will be reviewed by our team.
             </p>
 
@@ -716,9 +740,9 @@ const AnonymousComplaintForm = () => {
             </div>
 
             {/* Next Steps */}
-            <div className="max-w-2xl mx-auto bg-gray-50 p-6 rounded-lg text-left">
-              <h3 className="font-bold text-lg mb-4">What Happens Next?</h3>
-              <ul className="space-y-3">
+            <div className={`max-w-2xl mx-auto p-6 rounded-lg text-left ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+              <h3 className={`font-bold text-lg mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>What Happens Next?</h3>
+              <ul className={`space-y-3 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                 <li className="flex items-start">
                   <span className="bg-indigo-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">1</span>
                   <span>Your complaint will be reviewed within 24-48 hours</span>
@@ -747,7 +771,9 @@ const AnonymousComplaintForm = () => {
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+                className={`px-6 py-3 rounded-lg transition-colors font-semibold ${
+                  isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
               >
                 Submit Another
               </button>
@@ -761,7 +787,9 @@ const AnonymousComplaintForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4">
+    <div className={`min-h-screen py-12 px-4 transition-colors duration-300 ${
+      isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-50 via-white to-purple-50'
+    }`}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -772,10 +800,10 @@ const AnonymousComplaintForm = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          <h1 className={`text-4xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             Anonymous Complaint System
           </h1>
-          <p className="text-gray-600">
+          <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
             Your safety matters. Report incidents safely and anonymously.
           </p>
         </motion.div>
@@ -784,14 +812,14 @@ const AnonymousComplaintForm = () => {
         {currentStep < 5 && (
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-600">
+              <span className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 Step {currentStep} of {totalSteps - 1}
               </span>
-              <span className="text-sm font-medium text-gray-600">
+              <span className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 {Math.round((currentStep / (totalSteps - 1)) * 100)}% Complete
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className={`w-full rounded-full h-2 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
@@ -799,10 +827,10 @@ const AnonymousComplaintForm = () => {
               />
             </div>
             <div className="flex justify-between mt-2">
-              <span className="text-xs text-gray-500">Basic Info</span>
-              <span className="text-xs text-gray-500">Details</span>
-              <span className="text-xs text-gray-500">People</span>
-              <span className="text-xs text-gray-500">Evidence</span>
+              <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Basic Info</span>
+              <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Details</span>
+              <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>People</span>
+              <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Evidence</span>
             </div>
           </div>
         )}
@@ -811,7 +839,7 @@ const AnonymousComplaintForm = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-xl p-8"
+          className={`rounded-2xl shadow-xl p-8 transition-colors duration-300 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
           <form onSubmit={handleSubmit}>
             <AnimatePresence mode="wait">
@@ -827,7 +855,9 @@ const AnonymousComplaintForm = () => {
                     onClick={prevStep}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-semibold flex items-center"
+                    className={`px-6 py-3 rounded-lg transition-colors font-semibold flex items-center ${
+                      isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Previous
@@ -885,7 +915,7 @@ const AnonymousComplaintForm = () => {
             transition={{ delay: 0.5 }}
             className="mt-6 text-center"
           >
-            <p className="text-sm text-gray-600">
+            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               Need help? Contact support at{" "}
               <a href="mailto:support@safedesk.com" className="text-indigo-600 hover:underline">
                 support@safedesk.com
