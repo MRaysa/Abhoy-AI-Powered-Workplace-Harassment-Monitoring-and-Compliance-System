@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
+import Swal from 'sweetalert2';
 import {
   FaUsers,
   FaExclamationTriangle,
@@ -52,7 +53,7 @@ const EnhancedAdminDashboard = () => {
     try {
       setLoading(true);
       const [complaintsRes, usersRes] = await Promise.all([
-        fetch('http://localhost:3000/api/complaints'),
+        fetch('http://localhost:3000/api/complaints?limit=1000'),
         fetch('http://localhost:3000/api/users'),
       ]);
 
@@ -64,8 +65,8 @@ const EnhancedAdminDashboard = () => {
         setComplaints(allComplaints);
 
         // Calculate statistics
-        const pending = allComplaints.filter((c) => c.status === 'pending').length;
-        const approved = allComplaints.filter((c) => c.status === 'approved').length;
+        const pending = allComplaints.filter((c) => c.status === 'pending' || c.status === 'under_review').length;
+        const approved = allComplaints.filter((c) => c.status === 'verified' || c.status === 'resolved').length;
         const rejected = allComplaints.filter((c) => c.status === 'rejected').length;
 
         setStats({
@@ -85,11 +86,11 @@ const EnhancedAdminDashboard = () => {
 
   const handleApprove = async (complaintId) => {
     try {
-      // Update status to approved
+      // Update status to verified (backend's "approved" equivalent)
       const statusResponse = await fetch(`http://localhost:3000/api/complaints/${complaintId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'approved' }),
+        body: JSON.stringify({ status: 'verified' }),
       });
 
       // Approve for public forum
@@ -102,12 +103,40 @@ const EnhancedAdminDashboard = () => {
       if (statusResponse.ok && forumResponse.ok) {
         fetchDashboardData();
         setSelectedComplaint(null);
-        // Show success message
-        alert('Complaint approved and will now appear in the public forum!');
+        // Show success toast
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Complaint approved and will now appear in the public forum!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else {
+        const statusData = await statusResponse.json();
+        const forumData = await forumResponse.json();
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: `Failed to approve: ${statusData.message || forumData.message}`,
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       }
     } catch (error) {
       console.error('Error approving complaint:', error);
-      alert('Failed to approve complaint. Please try again.');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Failed to approve complaint. Please try again.',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
     }
   };
 
@@ -130,12 +159,40 @@ const EnhancedAdminDashboard = () => {
       if (statusResponse.ok && forumResponse.ok) {
         fetchDashboardData();
         setSelectedComplaint(null);
-        // Show success message
-        alert('Complaint rejected and will NOT appear in the public forum.');
+        // Show success toast
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'warning',
+          title: 'Complaint rejected and will NOT appear in the public forum.',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else {
+        const statusData = await statusResponse.json();
+        const forumData = await forumResponse.json();
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: `Failed to reject: ${statusData.message || forumData.message}`,
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       }
     } catch (error) {
       console.error('Error rejecting complaint:', error);
-      alert('Failed to reject complaint. Please try again.');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Failed to reject complaint. Please try again.',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
     }
   };
 
@@ -649,13 +706,13 @@ const EnhancedAdminDashboard = () => {
 
               <div className="flex gap-4">
                 <button
-                  onClick={() => handleApprove(selectedComplaint._id)}
+                  onClick={() => handleApprove(selectedComplaint.anonymousId)}
                   className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition shadow-lg"
                 >
                   <FaCheckCircle /> Approve & Publish to Feed
                 </button>
                 <button
-                  onClick={() => handleReject(selectedComplaint._id)}
+                  onClick={() => handleReject(selectedComplaint.anonymousId)}
                   className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition shadow-lg"
                 >
                   <FaBan /> Reject Complaint
