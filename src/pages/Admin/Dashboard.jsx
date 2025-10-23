@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeContext";
 import {
   FaFileAlt,
   FaExclamationTriangle,
@@ -8,6 +9,7 @@ import {
 } from "react-icons/fa";
 
 const Dashboard = () => {
+  const { isDark } = useTheme();
   const stats = [
     {
       title: "Total Reports",
@@ -40,9 +42,11 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${
+      isDark ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className={`text-3xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-800'}`}>
           Admin Dashboard
         </h1>
 
@@ -54,23 +58,23 @@ const Dashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-lg p-6"
+              className={`rounded-xl shadow-lg p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
             >
               <div
                 className={`bg-gradient-to-r ${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-white text-2xl mb-4`}
               >
                 {stat.icon}
               </div>
-              <p className="text-gray-600 text-sm">{stat.title}</p>
-              <p className="text-3xl font-bold text-gray-800">{stat.value}</p>
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{stat.title}</p>
+              <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>{stat.value}</p>
               <p className="text-sm text-green-600 mt-2">{stat.change} this month</p>
             </motion.div>
           ))}
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className={`rounded-xl shadow-lg p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+          <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             Recent Activity
           </h2>
           <div className="space-y-4">

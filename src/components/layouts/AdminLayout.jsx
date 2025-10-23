@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../shared/Sidebar";
+import { useTheme } from "../../contexts/ThemeContext";
 import {
   FaChartPie,
   FaTable,
@@ -14,6 +15,8 @@ import {
 } from "react-icons/fa";
 
 const AdminLayout = () => {
+  const { isDark } = useTheme();
+  
   const menuItems = [
     { path: "/admin/dashboard", label: "Dashboard", icon: <FaChartPie /> },
     { path: "/admin/enhanced-dashboard", label: "📊 Analytics Dashboard", icon: <FaChartLine /> },
@@ -34,7 +37,9 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      isDark ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
       <Navbar />
       <div className="flex">
         <Sidebar menuItems={menuItems} />
