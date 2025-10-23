@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeContext";
 import {
   Shield,
   CheckCircle,
@@ -20,6 +21,7 @@ import {
 import Swal from "sweetalert2";
 
 const ComplaintManagement = () => {
+  const { isDark } = useTheme();
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
@@ -182,16 +184,16 @@ const ComplaintManagement = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div className={`rounded-xl shadow-lg p-6 mb-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                 Complaint Management
               </h1>
-              <p className="text-gray-600">
+              <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
                 Review, verify, and manage anonymous complaints
               </p>
             </div>
@@ -208,105 +210,121 @@ const ComplaintManagement = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           {[
-            { label: "All", status: "all", icon: Shield, color: "indigo" },
-            { label: "Pending", status: "pending", icon: Clock, color: "yellow" },
-            { label: "Under Review", status: "under_review", icon: Eye, color: "blue" },
-            { label: "Verified", status: "verified", icon: CheckCircle, color: "green" },
-            { label: "Rejected", status: "rejected", icon: XCircle, color: "red" }
-          ].map((item) => (
-            <button
-              key={item.status}
-              onClick={() => setFilter(item.status)}
-              className={`p-4 rounded-lg shadow transition-all ${
-                filter === item.status
-                  ? `bg-${item.color}-600 text-white`
-                  : "bg-white hover:shadow-md"
-              }`}
-            >
-              <item.icon className="w-6 h-6 mx-auto mb-2" />
-              <div className="font-semibold">{item.label}</div>
-            </button>
-          ))}
+            { label: "All", status: "all", icon: Shield },
+            { label: "Pending", status: "pending", icon: Clock },
+            { label: "Under Review", status: "under_review", icon: Eye },
+            { label: "Verified", status: "verified", icon: CheckCircle },
+            { label: "Rejected", status: "rejected", icon: XCircle }
+          ].map((item) => {
+            const isActive = filter === item.status;
+            let activeClass = '';
+            if (isActive) {
+              switch(item.status) {
+                case 'all': activeClass = 'bg-indigo-600'; break;
+                case 'pending': activeClass = 'bg-yellow-600'; break;
+                case 'under_review': activeClass = 'bg-blue-600'; break;
+                case 'verified': activeClass = 'bg-green-600'; break;
+                case 'rejected': activeClass = 'bg-red-600'; break;
+              }
+            }
+            
+            return (
+              <button
+                key={item.status}
+                onClick={() => setFilter(item.status)}
+                className={`p-4 rounded-lg shadow transition-all ${
+                  isActive
+                    ? `${activeClass} text-white`
+                    : isDark ? "bg-gray-800 text-gray-300 hover:shadow-md hover:bg-gray-700" : "bg-white text-gray-700 hover:shadow-md"
+                }`}
+              >
+                <item.icon className="w-6 h-6 mx-auto mb-2" />
+                <div className="font-semibold">{item.label}</div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Search and Filter */}
-        <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
+        <div className={`rounded-xl shadow-lg p-4 mb-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           <div className="flex gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by title or Anonymous ID..."
-                className="w-full pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className={`w-full pl-10 pr-4 py-2 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300'
+                }`}
               />
             </div>
           </div>
         </div>
 
         {/* Complaints Table */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className={`rounded-xl shadow-lg overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-              <p className="text-gray-600 mt-4">Loading complaints...</p>
+              <p className={`mt-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading complaints...</p>
             </div>
           ) : filteredComplaints.length === 0 ? (
             <div className="text-center py-12">
-              <AlertTriangle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">No Complaints Found</h3>
-              <p className="text-gray-600">Try adjusting your filters or search term.</p>
+              <AlertTriangle className={`w-16 h-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+              <h3 className={`text-xl font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>No Complaints Found</h3>
+              <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Try adjusting your filters or search term.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b">
+                <thead className={`border-b ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50'}`}>
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       ID
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Title
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Type
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Priority
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Forum
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Date
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className={`divide-y ${isDark ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-gray-200'}`}>
                   {filteredComplaints.map((complaint) => (
-                    <tr key={complaint._id} className="hover:bg-gray-50">
+                    <tr key={complaint._id} className={`transition-colors ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Shield className="w-4 h-4 text-gray-400 mr-2" />
-                          <span className="text-sm font-mono text-gray-900">
+                          <Shield className={`w-4 h-4 mr-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+                          <span className={`text-sm font-mono ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                             {complaint.anonymousId}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
                           {complaint.title}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-600">
+                        <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                           {complaint.incidentType?.replace(/_/g, ' ')}
                         </span>
                       </td>
@@ -336,13 +354,13 @@ const ComplaintManagement = () => {
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                         {formatDate(complaint.createdAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <button
                           onClick={() => viewDetails(complaint.anonymousId)}
-                          className="text-indigo-600 hover:text-indigo-900 mr-3"
+                          className={`hover:underline ${isDark ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-900'}`}
                         >
                           View
                         </button>
@@ -356,21 +374,25 @@ const ComplaintManagement = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="px-6 py-4 bg-gray-50 border-t flex items-center justify-between">
+            <div className={`px-6 py-4 border-t flex items-center justify-between ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50'}`}>
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isDark ? 'bg-gray-800 border-gray-600 text-white hover:bg-gray-700' : 'bg-white border hover:bg-gray-50'
+                }`}
               >
                 Previous
               </button>
-              <span className="text-sm text-gray-700">
+              <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Page {page} of {totalPages}
               </span>
               <button
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isDark ? 'bg-gray-800 border-gray-600 text-white hover:bg-gray-700' : 'bg-white border hover:bg-gray-50'
+                }`}
               >
                 Next
               </button>
@@ -381,16 +403,16 @@ const ComplaintManagement = () => {
 
       {/* Detail Modal */}
       {selectedComplaint && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className={`rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className={`p-6 border-b ${isDark ? 'border-gray-700' : ''}`}>
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                   Complaint Details
                 </h2>
                 <button
                   onClick={() => setSelectedComplaint(null)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className={`text-2xl ${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   ×
                 </button>
@@ -400,50 +422,50 @@ const ComplaintManagement = () => {
             <div className="p-6 space-y-6">
               {/* Basic Info */}
               <div>
-                <h3 className="text-lg font-semibold mb-3">Basic Information</h3>
+                <h3 className={`text-lg font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-800'}`}>Basic Information</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Anonymous ID</p>
-                    <p className="font-mono font-semibold">{selectedComplaint.anonymousId}</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Anonymous ID</p>
+                    <p className={`font-mono font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{selectedComplaint.anonymousId}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Status</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Status</p>
                     <p className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[selectedComplaint.status]}`}>
                       {selectedComplaint.status}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Priority</p>
-                    <p className="font-semibold">{selectedComplaint.priority}</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Priority</p>
+                    <p className={`font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{selectedComplaint.priority}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Category</p>
-                    <p className="font-semibold">{selectedComplaint.category}</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Category</p>
+                    <p className={`font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{selectedComplaint.category}</p>
                   </div>
                 </div>
               </div>
 
               {/* Title & Description */}
               <div>
-                <h3 className="text-lg font-semibold mb-2">{selectedComplaint.title}</h3>
-                <p className="text-gray-700 whitespace-pre-line">{selectedComplaint.description}</p>
+                <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>{selectedComplaint.title}</h3>
+                <p className={`whitespace-pre-line ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{selectedComplaint.description}</p>
               </div>
 
               {/* Evidence */}
               {(selectedComplaint.evidenceFiles?.length > 0 || selectedComplaint.evidenceUrls?.length > 0) && (
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Evidence</h3>
+                  <h3 className={`text-lg font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-800'}`}>Evidence</h3>
                   <div className="space-y-2">
                     {selectedComplaint.evidenceFiles?.map((file, index) => (
-                      <div key={index} className="flex items-center bg-gray-50 p-3 rounded">
-                        <FileText className="w-4 h-4 text-gray-500 mr-2" />
-                        <span className="text-sm">{file.name}</span>
+                      <div key={index} className={`flex items-center p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <FileText className={`w-4 h-4 mr-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{file.name}</span>
                       </div>
                     ))}
                     {selectedComplaint.evidenceUrls?.map((item, index) => (
-                      <div key={index} className="flex items-center bg-gray-50 p-3 rounded">
-                        <FileText className="w-4 h-4 text-gray-500 mr-2" />
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:underline">
+                      <div key={index} className={`flex items-center p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <FileText className={`w-4 h-4 mr-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className={`text-sm hover:underline ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
                           Evidence Link {index + 1}
                         </a>
                       </div>
@@ -453,8 +475,8 @@ const ComplaintManagement = () => {
               )}
 
               {/* Actions */}
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-4">Admin Actions</h3>
+              <div className={`border-t pt-6 ${isDark ? 'border-gray-700' : ''}`}>
+                <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>Admin Actions</h3>
                 <div className="flex flex-wrap gap-3">
                   {selectedComplaint.status !== "verified" && (
                     <button
