@@ -24,6 +24,7 @@ import {
   FaCertificate,
   FaTachometerAlt,
   FaExclamationTriangle,
+  FaComments,
 } from "react-icons/fa";
 import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
 import { HiDesktopComputer } from "react-icons/hi";
@@ -82,7 +83,17 @@ const Navbar = () => {
               </Link>
 
               {user ? (
-                <div className="relative ml-3">
+                <>
+                  {/* Chat Button */}
+                  <Link
+                    to="/chat"
+                    className={`relative px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-[#0B2B37] hover:text-white'} transition duration-300 flex items-center`}
+                  >
+                    <FaComments className="text-xl" />
+                  </Link>
+
+                  {/* Profile Dropdown */}
+                  <div className="relative ml-3">
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                     className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'hover:bg-[#2d3748]' : 'hover:bg-[#0B2B37] hover:text-white'} transition duration-300 focus:outline-none`}
@@ -286,6 +297,7 @@ const Navbar = () => {
                     </motion.div>
                   )}
                 </div>
+                </>
               ) : (
                 <>
                   <Link

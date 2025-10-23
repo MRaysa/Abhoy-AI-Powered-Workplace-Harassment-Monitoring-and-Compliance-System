@@ -8,6 +8,7 @@ import ForgotPassword from "../pages/Auth/ForgotPassword";
 import PublicForum from "../pages/Employee/PublicForum";
 import AnonymousComplaint from "../pages/Employee/AnonymousComplaint";
 import TrackComplaint from "../pages/Employee/TrackComplaint";
+import Chat from "../pages/Common/Chat";
 import employeeRoutes from "./EmployeeRoutes";
 import adminRoutes from "./AdminRoutes";
 import PrivateRoute from "./PrivateRoute";
@@ -45,6 +46,14 @@ const router = createBrowserRouter([
       {
         path: "forgot-password",
         element: <ForgotPassword />,
+      },
+      {
+        path: "chat",
+        element: (
+          <PrivateRoute>
+            <Chat />
+          </PrivateRoute>
+        ),
       },
       
     ],
