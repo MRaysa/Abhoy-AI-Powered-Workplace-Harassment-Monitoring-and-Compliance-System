@@ -208,10 +208,10 @@ const UserManagement = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading users...</p>
+          <p className={`mt-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading users...</p>
         </div>
       </div>
     );
@@ -258,7 +258,11 @@ const UserManagement = () => {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                isDark 
+                  ? 'bg-gray-700 border-gray-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
             >
               <option value="all">All Roles</option>
               <option value="employee">Employee</option>
@@ -269,7 +273,11 @@ const UserManagement = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                isDark 
+                  ? 'bg-gray-700 border-gray-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -279,42 +287,42 @@ const UserManagement = () => {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className={`rounded-xl shadow-lg overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Role
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Phone
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Created
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
               {filteredUsers.map((user) => (
                 <motion.tr
                   key={user._id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="hover:bg-gray-50"
+                  className={`transition-colors ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 >
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <td className={`px-6 py-4 text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                     <div className="flex items-center">
                       {user.photoURL ? (
                         <img
@@ -332,10 +340,10 @@ const UserManagement = () => {
                       {user.name}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className={`px-6 py-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                     {user.email}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className={`px-6 py-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                     <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
                       user.role === 'admin' || user.role === 'super_admin' 
                         ? 'bg-purple-100 text-purple-800'
@@ -344,7 +352,7 @@ const UserManagement = () => {
                       {user.role?.replace('_', ' ').toUpperCase()}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className={`px-6 py-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                     {user.phone || '-'}
                   </td>
                   <td className="px-6 py-4">
@@ -356,20 +364,20 @@ const UserManagement = () => {
                       {user.isActive !== false ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className={`px-6 py-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                     {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}
                   </td>
                   <td className="px-6 py-4 text-sm space-x-2">
                     <button 
                       onClick={() => handleEdit(user)}
-                      className="text-indigo-600 hover:text-indigo-900 p-1"
+                      className={`p-1 ${isDark ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-900'}`}
                       title="Edit user"
                     >
                       <FaEdit />
                     </button>
                     <button 
                       onClick={() => handleDelete(user)}
-                      className="text-red-600 hover:text-red-900 p-1"
+                      className={`p-1 ${isDark ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-900'}`}
                       title="Delete user"
                     >
                       <FaTrash />
@@ -381,7 +389,7 @@ const UserManagement = () => {
           </table>
           
           {filteredUsers.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
               No users found matching your criteria.
             </div>
           )}
@@ -390,20 +398,20 @@ const UserManagement = () => {
 
       {/* Add User Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-6 w-full max-w-md mx-4"
+            className={`rounded-xl p-6 w-full max-w-md mx-4 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Add New User</h2>
+              <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Add New User</h2>
               <button
                 onClick={() => {
                   setShowAddModal(false);
                   resetForm();
                 }}
-                className="text-gray-400 hover:text-gray-600"
+                className={isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'}
               >
                 <FaTimes />
               </button>
@@ -411,7 +419,7 @@ const UserManagement = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Name *
                 </label>
                 <input
@@ -420,7 +428,7 @@ const UserManagement = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                    errors.name ? 'border-red-500' : isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
                   }`}
                   placeholder="Enter full name"
                 />
@@ -428,7 +436,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Email *
                 </label>
                 <input
@@ -437,7 +445,7 @@ const UserManagement = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                    errors.email ? 'border-red-500' : isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
                   }`}
                   placeholder="Enter email address"
                 />
@@ -445,7 +453,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Password *
                 </label>
                 <input
@@ -454,7 +462,7 @@ const UserManagement = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                    errors.password ? 'border-red-500' : isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
                   }`}
                   placeholder="Enter password"
                 />
@@ -462,7 +470,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Phone
                 </label>
                 <input
@@ -470,20 +478,24 @@ const UserManagement = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                   placeholder="Enter phone number"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Role
                 </label>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                 >
                   <option value="employee">Employee</option>
                   <option value="admin">Admin</option>
@@ -492,14 +504,16 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Address
                 </label>
                 <textarea
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                   placeholder="Enter address"
                   rows="2"
                 />
@@ -531,21 +545,21 @@ const UserManagement = () => {
 
       {/* Edit User Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-6 w-full max-w-md mx-4"
+            className={`rounded-xl p-6 w-full max-w-md mx-4 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Edit User</h2>
+              <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Edit User</h2>
               <button
                 onClick={() => {
                   setShowEditModal(false);
                   setEditingUser(null);
                   resetForm();
                 }}
-                className="text-gray-400 hover:text-gray-600"
+                className={`${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'} transition-colors`}
               >
                 <FaTimes />
               </button>
@@ -553,7 +567,7 @@ const UserManagement = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Name *
                 </label>
                 <input
@@ -562,7 +576,7 @@ const UserManagement = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                    errors.name ? 'border-red-500' : isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
                   }`}
                   placeholder="Enter full name"
                 />
@@ -570,7 +584,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Email *
                 </label>
                 <input
@@ -579,7 +593,7 @@ const UserManagement = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                    errors.email ? 'border-red-500' : isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
                   }`}
                   placeholder="Enter email address"
                 />
@@ -587,7 +601,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   New Password (leave blank to keep current)
                 </label>
                 <input
@@ -596,7 +610,7 @@ const UserManagement = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                    errors.password ? 'border-red-500' : isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
                   }`}
                   placeholder="Enter new password"
                 />
@@ -604,7 +618,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Phone
                 </label>
                 <input
@@ -612,20 +626,24 @@ const UserManagement = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                   placeholder="Enter phone number"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Role
                 </label>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                 >
                   <option value="employee">Employee</option>
                   <option value="admin">Admin</option>
@@ -634,14 +652,16 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Address
                 </label>
                 <textarea
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'
+                  }`}
                   placeholder="Enter address"
                   rows="2"
                 />
@@ -655,13 +675,15 @@ const UserManagement = () => {
                     setEditingUser(null);
                     resetForm();
                   }}
-                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className={`px-4 py-2 border rounded-lg transition-colors ${
+                    isDark ? 'text-gray-300 border-gray-600 hover:bg-gray-700' : 'text-gray-600 border-gray-300 hover:bg-gray-50'
+                  }`}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition-colors"
                 >
                   <FaSave />
                   Update User
