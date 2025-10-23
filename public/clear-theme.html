@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Theme - SafeDesk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .success {
+            color: #28a745;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: #666;
+        }
+        .current-theme {
+            margin-top: 20px;
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 SafeDesk Theme Manager</h1>
+        <p>Current theme stored in your browser:</p>
+        <div class="current-theme" id="currentTheme">Loading...</div>
+        
+        <div style="margin-top: 30px;">
+            <button onclick="setLightMode()">☀️ Set Light Mode</button>
+            <button onclick="setDarkMode()">🌙 Set Dark Mode</button>
+            <button onclick="clearTheme()">🗑️ Clear Theme</button>
+        </div>
+        
+        <div class="success" id="successMessage"></div>
+        
+        <div class="info">
+            <strong>Instructions:</strong><br>
+            1. Click a button above to change theme<br>
+            2. Refresh your SafeDesk page to see changes
+        </div>
+        
+        <button onclick="goBack()" style="background: #6c757d; margin-top: 20px;">
+            ← Back to SafeDesk
+        </button>
+    </div>
+
+    <script>
+        // Display current theme
+        function updateCurrentTheme() {
+            const theme = localStorage.getItem('theme');
+            document.getElementById('currentTheme').textContent = theme || 'None (will use default: light)';
+        }
+
+        function showSuccess(message) {
+            const successEl = document.getElementById('successMessage');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            setTimeout(() => {
+                successEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function setLightMode() {
+            localStorage.setItem('theme', 'light');
+            document.documentElement.classList.remove('dark');
+            updateCurrentTheme();
+            showSuccess('✅ Light mode activated! Refresh SafeDesk to see changes.');
+        }
+
+        function setDarkMode() {
+            localStorage.setItem('theme', 'dark');
+            document.documentElement.classList.add('dark');
+            updateCurrentTheme();
+            showSuccess('✅ Dark mode activated! Refresh SafeDesk to see changes.');
+        }
+
+        function clearTheme() {
+            localStorage.removeItem('theme');
+            document.documentElement.classList.remove('dark');
+            updateCurrentTheme();
+            showSuccess('✅ Theme cleared! SafeDesk will use default light mode. Refresh to see changes.');
+        }
+
+        function goBack() {
+            window.location.href = '/';
+        }
+
+        // Initialize
+        updateCurrentTheme();
+    </script>
+</body>
+</html>

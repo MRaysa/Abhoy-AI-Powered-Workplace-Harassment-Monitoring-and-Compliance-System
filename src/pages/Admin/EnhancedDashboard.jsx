@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   FaUsers,
   FaExclamationTriangle,
@@ -29,6 +30,7 @@ import {
 } from 'recharts';
 
 const EnhancedAdminDashboard = () => {
+  const { isDark } = useTheme();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalComplaints: 0,
@@ -204,17 +206,21 @@ const EnhancedAdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
+    <div className={`min-h-screen p-6 transition-colors duration-300 ${
+      isDark 
+        ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
+        : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
+    }`}>
       {/* Header */}
       <div className="mb-8">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold text-gray-800 dark:text-white mb-2"
+          className={`text-4xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}
         >
           📊 Enhanced Admin Analytics
         </motion.h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
           Real-time monitoring and complaint management system
         </p>
       </div>
@@ -333,9 +339,9 @@ const EnhancedAdminDashboard = () => {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6"
+          className={`rounded-2xl shadow-xl p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+          <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             📈 Complaint Trends (Last 7 Days)
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -372,9 +378,9 @@ const EnhancedAdminDashboard = () => {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6"
+          className={`rounded-2xl shadow-xl p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+          <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             🎯 Status Distribution
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -402,9 +408,9 @@ const EnhancedAdminDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6"
+          className={`rounded-2xl shadow-xl p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+          <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             📊 Complaints by Category
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -433,9 +439,9 @@ const EnhancedAdminDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6"
+          className={`rounded-2xl shadow-xl p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+          <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             ⚠️ Severity Levels
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -461,13 +467,15 @@ const EnhancedAdminDashboard = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6"
+        className={`rounded-2xl shadow-xl p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
             🔍 Pending Complaints for Review
           </h3>
-          <span className="bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 px-4 py-2 rounded-lg font-semibold">
+          <span className={`px-4 py-2 rounded-lg font-semibold ${
+            isDark ? 'bg-orange-900 text-orange-300' : 'bg-orange-100 text-orange-600'
+          }`}>
             {stats.pendingComplaints} Pending
           </span>
         </div>
@@ -570,17 +578,23 @@ const EnhancedAdminDashboard = () => {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+            className={`rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto ${
+              isDark ? 'bg-gray-800' : 'bg-white'
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+                <h2 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                   🔍 Review Complaint
                 </h2>
                 <button
                   onClick={() => setSelectedComplaint(null)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
+                  className={`text-2xl ${
+                    isDark 
+                      ? 'text-gray-400 hover:text-gray-200' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
                 >
                   ×
                 </button>
