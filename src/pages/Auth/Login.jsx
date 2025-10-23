@@ -161,7 +161,7 @@ const SignIn = () => {
             >
               <span className="text-indigo-600 font-bold text-3xl">S</span>
             </motion.div>
-            <h1 className="text-3xl font-bold text-white">Welcome to SafeDesk</h1>
+            <h1 className="text-3xl font-bold text-white">Welcome to অভয়</h1>
             <p className="text-indigo-100 mt-2">Sign in to access your workplace safety portal</p>
           </div>
         </div>
@@ -275,7 +275,7 @@ const SignIn = () => {
                 </svg>
                 Signing In...
               </span>
-            ) : "Sign In to SafeDesk"}
+            ) : "Sign In to অভয়"}
           </motion.button>
 
           {/* Divider */}

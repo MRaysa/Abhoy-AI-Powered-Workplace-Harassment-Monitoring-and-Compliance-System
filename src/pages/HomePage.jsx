@@ -194,7 +194,7 @@ const HomePage = () => {
 
   const testimonials = [
     {
-      quote: 'SafeDesk gave me the courage to speak up - anonymously and effectively. I finally felt heard without fear.',
+      quote: 'অভয় gave me the courage to speak up - anonymously and effectively. I finally felt heard without fear.',
       author: 'Anonymous User',
       role: 'University Student',
       rating: 5
@@ -206,7 +206,7 @@ const HomePage = () => {
       rating: 5
     },
     {
-      quote: 'Being able to verify my report with evidence made all the difference. SafeDesk restored my voice.',
+      quote: 'Being able to verify my report with evidence made all the difference. অভয় restored my voice.',
       author: 'Anonymous User',
       role: 'Healthcare Worker',
       rating: 5
@@ -239,11 +239,11 @@ const HomePage = () => {
       answer: 'Verification typically takes 24-48 hours. You\'ll receive updates via your Anonymous ID dashboard. If you provide strong evidence, the process may be faster.'
     },
     {
-      question: 'Can organizations use SafeDesk for training?',
-      answer: 'Yes! We offer certification training programs for workplaces and universities. Organizations can use SafeDesk to create safer environments and demonstrate compliance with harassment prevention policies.'
+      question: 'Can organizations use অভয় for training?',
+      answer: 'Yes! We offer certification training programs for workplaces and universities. Organizations can use অভয় to create safer environments and demonstrate compliance with harassment prevention policies.'
     },
     {
-      question: 'What countries and laws does SafeDesk cover?',
+      question: 'What countries and laws does অভয় cover?',
       answer: 'We provide legal guidance for 50+ countries, covering workplace harassment, Title IX (USA), UK Equality Act, EU directives, and more. Our system adapts to local laws automatically.'
     }
   ];
@@ -295,7 +295,7 @@ const HomePage = () => {
         <section id="features" className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose SafeDesk?</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose অভয়?</h2>
               <p className={`text-xl ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Our Core Safeguards for Your Protection</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -470,7 +470,7 @@ const HomePage = () => {
                 </span>
               </h2>
               <p className={`text-xl ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Everything you need to know about SafeDesk
+                Everything you need to know about অভয়
               </p>
             </motion.div>
 
@@ -554,7 +554,7 @@ const HomePage = () => {
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6">Join Our Mission</h2>
                 <p className={`text-lg mb-6 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                  SafeDesk is built to end harassment cycles through technology and empathy. We believe every voice deserves to be heard safely and every survivor deserves support without fear of retaliation.
+                  অভয় is built to end harassment cycles through technology and empathy. We believe every voice deserves to be heard safely and every survivor deserves support without fear of retaliation.
                 </p>
                 <p className={`text-lg mb-6 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Our platform combines cutting-edge security with human-centered design to create a space where reporting harassment is not only safe but empowering. Together, we can build workplaces and campuses free from harassment.

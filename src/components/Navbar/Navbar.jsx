@@ -63,10 +63,10 @@ const Navbar = () => {
                 transition={{ duration: 0.5 }}
                 className="h-8 w-8 bg-[#617C88] rounded-full flex items-center justify-center mr-2"
               >
-                <span className="text-[#D5E6EE] font-bold text-xl">S</span>
+                <span className="text-[#D5E6EE] font-bold text-xl">অ</span>
               </motion.div>
               <span className={`font-bold text-xl hidden sm:inline ${isDark ? 'text-white' : 'text-[#0B2B37]'}`}>
-                SafeDesk
+                অভয়
               </span>
             </Link>
           </div>

@@ -260,7 +260,7 @@ const AnonymousComplaintForm = () => {
     // Text
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 24px Arial';
-    ctx.fillText('SafeDesk Anonymous Complaint ID', 50, 100);
+    ctx.fillText('অভয় Anonymous Complaint ID', 50, 100);
     ctx.font = 'bold 48px monospace';
     ctx.fillText(anonymousId, 50, 200);
     ctx.font = '18px Arial';

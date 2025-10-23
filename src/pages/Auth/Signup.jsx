@@ -234,7 +234,7 @@ const SignUp = () => {
             >
               <span className="text-indigo-600 font-bold text-3xl">S</span>
             </motion.div>
-            <h1 className="text-3xl font-bold text-white">Join SafeDesk</h1>
+            <h1 className="text-3xl font-bold text-white">Join অভয়</h1>
             <p className="text-indigo-100 mt-2">Create your workplace safety account</p>
           </div>
         </div>
@@ -495,7 +495,7 @@ const SignUp = () => {
                 </svg>
                 Creating Account...
               </span>
-            ) : "Create SafeDesk Account"}
+            ) : "Create অভয় Account"}
           </motion.button>
 
           {/* Divider */}

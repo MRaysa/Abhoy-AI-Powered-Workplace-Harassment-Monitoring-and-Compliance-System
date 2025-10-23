@@ -115,7 +115,7 @@ const TrackComplaint = () => {
     if (!complaint) return;
 
     const reportText = `
-SAFEDESK COMPLAINT REPORT
+ABHOY COMPLAINT REPORT
 ========================
 
 Anonymous ID: ${complaint.anonymousId}
@@ -137,7 +137,7 @@ Last Updated: ${formatDate(complaint.updatedAt)}
 ${complaint.verificationStatus === 'verified' ? '✓ This complaint has been verified' : ''}
 
 ---
-This is an official SafeDesk report.
+This is an official অভয় report.
 For inquiries, contact: support@safedesk.com
 `;
 

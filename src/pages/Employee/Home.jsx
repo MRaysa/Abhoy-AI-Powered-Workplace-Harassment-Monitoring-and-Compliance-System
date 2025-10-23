@@ -80,7 +80,7 @@ const Home = () => {
           <div className="flex items-center mb-4">
             <FaShieldAlt className="text-5xl mr-4" />
             <div>
-              <h1 className="text-4xl font-bold mb-2">Welcome to SafeDesk</h1>
+              <h1 className="text-4xl font-bold mb-2">Welcome to অভয়</h1>
               <p className="text-lg text-indigo-100">
                 Your AI-powered workplace safety companion. Report incidents safely, track
                 progress, and access support resources.
