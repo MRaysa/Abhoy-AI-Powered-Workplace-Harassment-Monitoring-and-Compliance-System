@@ -1,4 +1,4 @@
-# SafeDesk - AI-Powered Workplace Harassment Monitoring System
+# Abhoy - AI-Powered Workplace Harassment Monitoring System
 
 ![SafeDesk](https://img.shields.io/badge/SafeDesk-Workplace%20Safety-blue)
 ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)
