@@ -348,7 +348,7 @@ const Chat = () => {
                         isDark
                           ? 'bg-gray-700 border-gray-600 text-white'
                           : 'bg-white border-gray-300 text-gray-900'
-                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                      } focus:ring-2 focus:ring-[#003135] focus:border-transparent`}
                     />
                   </div>
                 </div>
@@ -370,7 +370,7 @@ const Chat = () => {
                       isDark
                         ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                         : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                    } focus:ring-2 focus:ring-[#003135] focus:border-transparent`}
                   />
                 </div>
 
@@ -392,7 +392,7 @@ const Chat = () => {
                         isDark
                           ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                      } focus:ring-2 focus:ring-[#003135] focus:border-transparent`}
                     />
                   </div>
                   <div>
@@ -410,7 +410,7 @@ const Chat = () => {
                         isDark
                           ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                      } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                      } focus:ring-2 focus:ring-[#003135] focus:border-transparent`}
                     />
                   </div>
                 </div>
@@ -431,7 +431,7 @@ const Chat = () => {
                       isDark
                         ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                         : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none`}
+                    } focus:ring-2 focus:ring-[#003135] focus:border-transparent resize-none`}
                   />
                 </div>
 
@@ -494,7 +494,7 @@ const Chat = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition"
+                  className="px-6 py-3 bg-gradient-to-r from-[#0FA4AF] to-[#003135] text-white rounded-lg font-semibold hover:shadow-lg transition"
                 >
                   Confirm Schedule
                 </button>

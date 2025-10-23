@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* About Section */}
           <div>
-            <h3 className="text-xl font-bold mb-4">SafeDesk</h3>
+            <h3 className="text-xl font-bold mb-4">অভয়</h3>
             <p className="text-gray-300 text-sm">
               Empowering individuals to report workplace harassment anonymously and safely.
             </p>
@@ -39,8 +39,8 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-300 text-sm">
-              <li>Email: support@safedesk.com</li>
-              <li>Phone: 1-800-SAFE-DESK</li>
+              <li>Email: support@অভয়.com</li>
+              <li>Phone: 012-345-6789</li>
               <li>24/7 Crisis Hotline</li>
             </ul>
           </div>
@@ -48,7 +48,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} SafeDesk. All rights reserved. | Breaking the silence safely.</p>
+          <p>&copy; {new Date().getFullYear()} অভয়. All rights reserved. | Breaking the silence safely.</p>
         </div>
       </div>
     </footer>

@@ -141,63 +141,78 @@ const SignIn = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${
-      isDark
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
-        : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
-    }`}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-20" style={{ backgroundColor: isDark ? '#1a1a1a' : '#AFDDE540' }}>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden ${
-          isDark ? 'bg-gray-800' : 'bg-white'
-        }`}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-md rounded-2xl shadow-xl overflow-hidden"
+        style={{ backgroundColor: isDark ? '#2d2d2d' : '#ffffff' }}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-white opacity-10">
-            <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-1/2 translate-y-1/2 opacity-20"></div>
+        <div className="p-8 text-center relative overflow-hidden" style={{ background: isDark ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' : 'linear-gradient(135deg, #024950 0%, #003135 100%)' }}>
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-32 h-32 rounded-full -translate-x-1/2 -translate-y-1/2" style={{ backgroundColor: '#AFDDE5' }}></div>
+            <div className="absolute bottom-0 right-0 w-24 h-24 rounded-full translate-x-1/2 translate-y-1/2" style={{ backgroundColor: '#AFDDE5' }}></div>
           </div>
           <div className="relative">
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-lg"
+              className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 shadow-lg"
+              style={{ backgroundColor: '#AFDDE5' }}
             >
-              <span className="text-indigo-600 font-bold text-3xl">অ</span>
+              <span className="font-bold text-3xl" style={{ color: '#003135' }}>অ</span>
             </motion.div>
-            <h1 className="text-3xl font-bold text-white">Welcome to অভয়</h1>
-            <p className="text-indigo-100 mt-2">Sign in to access your workplace safety portal</p>
+            <motion.h1 
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="text-3xl font-bold text-white mb-2"
+            >
+              Welcome to অভয়
+            </motion.h1>
+            <motion.p 
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="text-sm"
+              style={{ color: '#AFDDE5' }}
+            >
+              Sign in to access your workplace safety portal
+            </motion.p>
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="px-8 pt-6">
-            <div className={`border-l-4 p-4 ${
-              isDark
-                ? 'bg-red-900/50 border-red-500 text-red-200'
-                : 'bg-red-100 border-red-500 text-red-700'
-            }`}>
-              <p>{error}</p>
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="mx-8 mt-6"
+          >
+            <div className="border-l-4 p-4 rounded-r-lg" style={{ backgroundColor: isDark ? 'rgba(150, 71, 52, 0.2)' : '#fff5f5', borderColor: '#964734' }}>
+              <p className="text-sm" style={{ color: isDark ? '#ff9999' : '#964734' }}>{error}</p>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="p-8 space-y-6">
+        <div className="p-8 space-y-5">
           {/* Email Field */}
-          <div className="space-y-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            className="space-y-2"
+          >
             <label
               htmlFor="email"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
+              className="flex items-center text-sm font-medium"
+              style={{ color: isDark ? '#AFDDE5' : '#003135' }}
             >
-              <FaEnvelope className="mr-2 text-indigo-500" />
+              <FaEnvelope className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
               Email Address
             </label>
             <input
@@ -206,25 +221,32 @@ const SignIn = () => {
               value={email}
               ref={emailRef}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                isDark
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-              }`}
+              className="w-full px-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+              style={{ 
+                borderColor: isDark ? '#444' : '#AFDDE5',
+                backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                color: isDark ? '#fff' : '#003135'
+              }}
+              onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+              onBlur={(e) => e.target.style.borderColor = isDark ? '#444' : '#AFDDE5'}
               placeholder="your@email.com"
               required
             />
-          </div>
+          </motion.div>
 
           {/* Password Field */}
-          <div className="space-y-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="space-y-2"
+          >
             <label
               htmlFor="password"
-              className={`flex items-center text-sm font-medium ${
-                isDark ? 'text-gray-200' : 'text-gray-700'
-              }`}
+              className="flex items-center text-sm font-medium"
+              style={{ color: isDark ? '#AFDDE5' : '#003135' }}
             >
-              <FaLock className="mr-2 text-indigo-500" />
+              <FaLock className="mr-2" style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
               Password
             </label>
             <div className="relative">
@@ -233,55 +255,59 @@ const SignIn = () => {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                }`}
+                className="w-full px-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none"
+                style={{ 
+                  borderColor: isDark ? '#444' : '#AFDDE5',
+                  backgroundColor: isDark ? '#3d3d3d' : '#fff',
+                  color: isDark ? '#fff' : '#003135'
+                }}
+                onFocus={(e) => e.target.style.borderColor = isDark ? '#AFDDE5' : '#024950'}
+                onBlur={(e) => e.target.style.borderColor = isDark ? '#444' : '#AFDDE5'}
                 placeholder="••••••••"
                 required
                 minLength="6"
               />
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <FaEyeSlash className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                  <FaEyeSlash style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
                 ) : (
-                  <FaEye className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                  <FaEye style={{ color: isDark ? '#AFDDE5' : '#024950' }} />
                 )}
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-sm">
             <div className="flex items-center">
               <input
                 id="remember-me"
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                className="h-4 w-4 rounded border-2 cursor-pointer"
+                style={{ accentColor: isDark ? '#AFDDE5' : '#024950', borderColor: isDark ? '#666' : '#AFDDE5' }}
               />
               <label
                 htmlFor="remember-me"
-                className={`ml-2 block text-sm ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}
+                className="ml-2 cursor-pointer"
+                style={{ color: isDark ? '#ccc' : '#003135' }}
               >
                 Remember me
               </label>
             </div>
             <Link
               to="/forgot-password"
-              className={`text-sm hover:underline transition ${
-                isDark
-                  ? 'text-indigo-400 hover:text-indigo-300'
-                  : 'text-indigo-600 hover:text-indigo-700'
-              }`}
+              className="font-medium transition-all duration-200"
+              style={{ color: isDark ? '#AFDDE5' : '#024950' }}
+              onMouseEnter={(e) => e.target.style.transform = 'translateX(2px)'}
+              onMouseLeave={(e) => e.target.style.transform = 'translateX(0)'}
             >
               Forgot password?
             </Link>
@@ -289,36 +315,39 @@ const SignIn = () => {
 
           {/* Submit Button */}
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className={`w-full py-3 px-4 rounded-lg text-white font-semibold ${
-              loading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-            } transition-all shadow-lg hover:shadow-xl`}
+            onClick={handleLogin}
+            className="w-full py-3 px-4 rounded-lg text-white font-semibold transition-all duration-300 shadow-lg"
+            style={{ 
+              backgroundColor: loading ? (isDark ? '#666' : '#AFDDE5') : (isDark ? '#AFDDE5' : '#003135'),
+              color: loading ? '#fff' : (isDark ? '#003135' : '#fff'),
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer'
+            }}
           >
             {loading ? (
               <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={{ color: isDark ? '#003135' : '#fff' }}>
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 Signing In...
               </span>
-            ) : "Sign In to অভয়"}
+            ) : (
+              "Sign In to অভয়"
+            )}
           </motion.button>
 
           {/* Divider */}
-          <div className="relative">
+          <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
-              <div className={`w-full border-t ${
-                isDark ? 'border-gray-600' : 'border-gray-300'
-              }`}></div>
+              <div className="w-full border-t" style={{ borderColor: isDark ? '#444' : '#AFDDE5' }}></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className={`px-3 ${
-                isDark ? 'bg-gray-800 text-gray-400' : 'bg-white text-gray-500'
-              }`}>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3" style={{ backgroundColor: isDark ? '#2d2d2d' : '#ffffff', color: isDark ? '#AFDDE5' : '#024950' }}>
                 Or continue with
               </span>
             </div>
@@ -326,41 +355,37 @@ const SignIn = () => {
 
           {/* Google Login Button */}
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={handleGoogleLogin}
-            className={`w-full flex items-center justify-center gap-3 py-3 px-4 border-2 rounded-lg transition-all font-medium ${
-              isDark
-                ? 'border-gray-600 hover:bg-gray-700 hover:border-gray-500 text-gray-200'
-                : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700'
-            }`}
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 rounded-lg transition-all duration-200 shadow-sm font-medium"
+            style={{ 
+              borderColor: isDark ? '#444' : '#AFDDE5',
+              backgroundColor: isDark ? '#3d3d3d' : '#fff',
+              color: isDark ? '#fff' : '#003135'
+            }}
           >
-            <FaGoogle className="text-red-500 text-xl" />
+            <FaGoogle className="text-xl" style={{ color: '#964734' }} />
             <span>Sign in with Google</span>
           </motion.button>
-        </form>
+        </div>
 
         {/* Footer */}
-        <div className={`px-8 py-5 text-center border-t ${
-          isDark
-            ? 'bg-gradient-to-r from-gray-700 to-gray-700 border-gray-700'
-            : 'bg-gradient-to-r from-gray-50 to-indigo-50 border-gray-200'
-        }`}>
-          <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+        <div className="px-8 py-5 text-center" style={{ backgroundColor: isDark ? '#1a1a1a' : '#ecf8f8' }}>
+          <p className="text-sm" style={{ color: isDark ? '#ccc' : '#024950' }}>
             Don't have an account?{" "}
             <a
               href="/signup"
-              className={`font-semibold hover:underline transition ${
-                isDark
-                  ? 'text-indigo-400 hover:text-indigo-300'
-                  : 'text-indigo-600 hover:text-indigo-700'
-              }`}
+              className="font-semibold transition-all duration-200"
+              style={{ color: isDark ? '#AFDDE5' : '#003135' }}
+              onMouseEnter={(e) => e.target.style.transform = 'translateX(2px)'}
+              onMouseLeave={(e) => e.target.style.transform = 'translateX(0)'}
             >
               Create an account
             </a>
           </p>
-          <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+          <p className="text-xs mt-2" style={{ color: isDark ? '#888' : '#024950', opacity: 0.8 }}>
             Secure workplace harassment monitoring & compliance
           </p>
         </div>
