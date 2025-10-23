@@ -4,7 +4,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { FaPaperPlane, FaUser, FaRobot, FaGavel, FaShieldAlt, FaTimes, FaCalendar, FaClock, FaEnvelope, FaPhone, FaComment } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://abhoy-rho.vercel.app/api';
 
 const Chat = () => {
   const { isDark } = useTheme();

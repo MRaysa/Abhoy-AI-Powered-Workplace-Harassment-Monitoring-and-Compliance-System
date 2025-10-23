@@ -45,7 +45,7 @@ const ComplaintManagement = () => {
   const fetchComplaints = async () => {
     setLoading(true);
     try {
-      let url = `http://localhost:3000/api/complaints?page=${page}&limit=10`;
+      let url = `https://abhoy-rho.vercel.app/api/complaints?page=${page}&limit=10`;
       
       if (filter !== "all") {
         url += `&status=${filter}`;
@@ -83,7 +83,7 @@ const ComplaintManagement = () => {
       });
 
       const response = await fetch(
-        `http://localhost:3000/api/complaints/${anonymousId}/status`,
+        `https://abhoy-rho.vercel.app/api/complaints/${anonymousId}/status`,
         {
           method: "PATCH",
           headers: {
@@ -128,7 +128,7 @@ const ComplaintManagement = () => {
 
       if (result.isConfirmed) {
         const response = await fetch(
-          `http://localhost:3000/api/complaints/${anonymousId}/approve-forum`,
+          `https://abhoy-rho.vercel.app/api/complaints/${anonymousId}/approve-forum`,
           {
             method: "PATCH",
             headers: {
@@ -158,7 +158,7 @@ const ComplaintManagement = () => {
   const viewDetails = async (anonymousId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/complaints/${anonymousId}`
+        `https://abhoy-rho.vercel.app/api/complaints/${anonymousId}`
       );
       const result = await response.json();
 

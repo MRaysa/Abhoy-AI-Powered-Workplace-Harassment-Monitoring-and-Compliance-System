@@ -1,4 +1,6 @@
 // API Configuration
+// Development: http://localhost:3000
+// Production: https://abhoy-server.vercel.app
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
 // Report Status

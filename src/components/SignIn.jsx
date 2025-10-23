@@ -73,7 +73,7 @@ const SignIn = () => {
       };
 
       // Update last sign-in time in database
-      const updateResponse = await fetch("http://localhost:3000/users", {
+      const updateResponse = await fetch("https://abhoy-rho.vercel.app/users", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +125,7 @@ const SignIn = () => {
       const user = result.user;
 
       // Update database for Google sign-in
-      const updateResponse = await fetch("http://localhost:3000/users", {
+      const updateResponse = await fetch("https://abhoy-rho.vercel.app/users", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
