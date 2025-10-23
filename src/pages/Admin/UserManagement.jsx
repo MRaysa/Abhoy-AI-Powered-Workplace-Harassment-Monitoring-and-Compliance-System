@@ -11,7 +11,8 @@ import {
   FaEye,
   FaUserPlus,
   FaTimes,
-  FaSave
+  FaSave,
+  FaUser
 } from "react-icons/fa";
 import { userAPI } from "../../services/api";
 import Swal from "sweetalert2";
@@ -328,15 +329,32 @@ const UserManagement = () => {
                         <img
                           src={user.photoURL}
                           alt={user.name}
-                          className="w-8 h-8 rounded-full mr-3"
+                          className="w-8 h-8 rounded-full mr-3 object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
                         />
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
-                          <span className="text-indigo-600 font-semibold text-sm">
-                            {user.name?.charAt(0)?.toUpperCase()}
+                      ) : null}
+                      <div 
+                        className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
+                          user.photoURL ? 'hidden' : ''
+                        } ${isDark ? 'bg-indigo-600' : 'bg-indigo-100'}`}
+                      >
+                        {user.name?.trim() ? (
+                          <span className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-indigo-600'}`}>
+                            {(() => {
+                              const nameParts = user.name.trim().split(' ');
+                              if (nameParts.length > 1) {
+                                return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
+                              }
+                              return user.name.charAt(0).toUpperCase();
+                            })()}
                           </span>
-                        </div>
-                      )}
+                        ) : (
+                          <FaUser className={`text-xs ${isDark ? 'text-white' : 'text-indigo-600'}`} />
+                        )}
+                      </div>
                       {user.name}
                     </div>
                   </td>
