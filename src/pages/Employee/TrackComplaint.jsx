@@ -15,8 +15,10 @@ import {
   Link2
 } from "lucide-react";
 import Swal from "sweetalert2";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const TrackComplaint = () => {
+  const { isDark } = useTheme();
   const [anonymousId, setAnonymousId] = useState("");
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -149,7 +151,9 @@ For inquiries, contact: support@safedesk.com
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4">
+    <div className={`min-h-screen py-12 px-4 transition-colors duration-300 ${
+      isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-50 via-white to-purple-50'
+    }`}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -160,10 +164,10 @@ For inquiries, contact: support@safedesk.com
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
             <Search className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          <h1 className={`text-4xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
             Track Your Complaint
           </h1>
-          <p className="text-gray-600">
+          <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
             Enter your Anonymous ID to check the status of your complaint
           </p>
         </motion.div>
@@ -172,24 +176,26 @@ For inquiries, contact: support@safedesk.com
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-xl p-8 mb-8"
+          className={`rounded-2xl shadow-xl p-8 mb-8 transition-colors duration-300 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
         >
           <form onSubmit={handleSearch} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Anonymous ID
               </label>
               <div className="relative">
-                <Shield className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Shield className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
                 <input
                   type="text"
                   value={anonymousId}
                   onChange={(e) => setAnonymousId(e.target.value.toUpperCase())}
                   placeholder="ANON-2025-XXXXXXXX"
-                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg font-mono"
+                  className={`w-full pl-12 pr-4 py-4 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg font-mono ${
+                    isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300'
+                  }`}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className={`text-xs mt-2 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                 Format: ANON-YYYY-XXXXXXXX (e.g., ANON-2025-ABC12345)
               </p>
             </div>
@@ -225,13 +231,13 @@ For inquiries, contact: support@safedesk.com
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg"
+            className={`border-l-4 border-red-500 p-6 rounded-lg ${isDark ? 'bg-red-900/30' : 'bg-red-50'}`}
           >
             <div className="flex items-center">
-              <AlertTriangle className="w-6 h-6 text-red-600 mr-3" />
+              <AlertTriangle className={`w-6 h-6 mr-3 ${isDark ? 'text-red-400' : 'text-red-600'}`} />
               <div>
-                <h3 className="font-semibold text-red-900">Complaint Not Found</h3>
-                <p className="text-sm text-red-700 mt-1">
+                <h3 className={`font-semibold ${isDark ? 'text-red-300' : 'text-red-900'}`}>Complaint Not Found</h3>
+                <p className={`text-sm mt-1 ${isDark ? 'text-red-300' : 'text-red-700'}`}>
                   No complaint found with this Anonymous ID. Please check and try again.
                 </p>
               </div>
@@ -254,10 +260,10 @@ For inquiries, contact: support@safedesk.com
                     className: `w-8 h-8 ${statusConfig[complaint.status]?.color || 'text-gray-600'} mr-3`
                   })}
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-800">
+                    <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                       {statusConfig[complaint.status]?.label || complaint.status}
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Last updated: {formatDate(complaint.updatedAt)}
                     </p>
                   </div>
@@ -266,24 +272,26 @@ For inquiries, contact: support@safedesk.com
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={downloadReport}
-                  className="p-3 bg-white rounded-lg shadow hover:shadow-md transition-all"
+                  className={`p-3 rounded-lg shadow hover:shadow-md transition-all ${
+                    isDark ? 'bg-gray-700' : 'bg-white'
+                  }`}
                   title="Download Report"
                 >
-                  <Download className="w-5 h-5 text-gray-700" />
+                  <Download className={`w-5 h-5 ${isDark ? 'text-gray-300' : 'text-gray-700'}`} />
                 </motion.button>
               </div>
             </div>
 
             {/* Main Details Card */}
-            <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className={`rounded-xl shadow-lg p-8 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
               {/* Header */}
-              <div className="border-b pb-4 mb-6">
+              <div className={`border-b pb-4 mb-6 ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
                 <div className="flex items-start justify-between">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
                       {complaint.title}
                     </h2>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className={`flex items-center gap-4 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       <span className="flex items-center">
                         <Shield className="w-4 h-4 mr-1" />
                         {complaint.anonymousId}
@@ -310,60 +318,60 @@ For inquiries, contact: support@safedesk.com
               {/* Incident Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 mb-2">Incident Type</h3>
-                  <p className="text-lg font-medium text-gray-800">
+                  <h3 className={`text-sm font-semibold mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Incident Type</h3>
+                  <p className={`text-lg font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                     {complaint.incidentType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 mb-2">Category</h3>
-                  <p className="text-lg font-medium text-gray-800">{complaint.category}</p>
+                  <h3 className={`text-sm font-semibold mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Category</h3>
+                  <p className={`text-lg font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{complaint.category}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 mb-2 flex items-center">
+                  <h3 className={`text-sm font-semibold mb-2 flex items-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                     <Calendar className="w-4 h-4 mr-1" />
                     Incident Date
                   </h3>
-                  <p className="text-lg font-medium text-gray-800">
+                  <p className={`text-lg font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                     {formatDate(complaint.incidentDate)}
                   </p>
                 </div>
                 {complaint.location && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-500 mb-2 flex items-center">
+                    <h3 className={`text-sm font-semibold mb-2 flex items-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       <MapPin className="w-4 h-4 mr-1" />
                       Location
                     </h3>
-                    <p className="text-lg font-medium text-gray-800">{complaint.location}</p>
+                    <p className={`text-lg font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{complaint.location}</p>
                   </div>
                 )}
               </div>
 
               {/* Description */}
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+                <h3 className={`text-sm font-semibold mb-3 flex items-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   <FileText className="w-4 h-4 mr-1" />
                   Description
                 </h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-700 whitespace-pre-line">{complaint.description}</p>
+                <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                  <p className={`whitespace-pre-line ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{complaint.description}</p>
                 </div>
               </div>
 
               {/* Evidence Section */}
               {(complaint.evidenceFiles?.length > 0 || complaint.evidenceUrls?.length > 0 || complaint.witnessFormUrl) && (
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 mb-3">Evidence Submitted</h3>
+                  <h3 className={`text-sm font-semibold mb-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Evidence Submitted</h3>
                   <div className="space-y-2">
                     {complaint.evidenceFiles?.map((file, index) => (
-                      <div key={index} className="flex items-center bg-gray-50 p-3 rounded">
-                        <FileText className="w-4 h-4 text-gray-500 mr-2" />
-                        <span className="text-sm text-gray-700">{file.name}</span>
+                      <div key={index} className={`flex items-center p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <FileText className={`w-4 h-4 mr-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{file.name}</span>
                       </div>
                     ))}
                     {complaint.evidenceUrls?.map((item, index) => (
-                      <div key={index} className="flex items-center bg-gray-50 p-3 rounded">
-                        <Link2 className="w-4 h-4 text-gray-500 mr-2" />
+                      <div key={index} className={`flex items-center p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <Link2 className={`w-4 h-4 mr-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
                         <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:underline">
                           Evidence Link {index + 1}
                         </a>
@@ -392,22 +400,22 @@ For inquiries, contact: support@safedesk.com
               )}
 
               {/* Timeline */}
-              <div className="border-t pt-6">
-                <h3 className="text-sm font-semibold text-gray-500 mb-4">Timeline</h3>
+              <div className={`border-t pt-6 ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                <h3 className={`text-sm font-semibold mb-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Timeline</h3>
                 <div className="space-y-4">
                   <div className="flex items-start">
                     <div className="flex-shrink-0 w-2 h-2 bg-indigo-600 rounded-full mt-2 mr-3"></div>
                     <div>
-                      <p className="font-medium text-gray-800">Complaint Submitted</p>
-                      <p className="text-sm text-gray-600">{formatDate(complaint.createdAt)}</p>
+                      <p className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Complaint Submitted</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{formatDate(complaint.createdAt)}</p>
                     </div>
                   </div>
                   {complaint.status !== 'pending' && (
                     <div className="flex items-start">
                       <div className="flex-shrink-0 w-2 h-2 bg-indigo-600 rounded-full mt-2 mr-3"></div>
                       <div>
-                        <p className="font-medium text-gray-800">Status Updated</p>
-                        <p className="text-sm text-gray-600">{formatDate(complaint.updatedAt)}</p>
+                        <p className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Status Updated</p>
+                        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{formatDate(complaint.updatedAt)}</p>
                       </div>
                     </div>
                   )}
@@ -415,8 +423,8 @@ For inquiries, contact: support@safedesk.com
                     <div className="flex items-start">
                       <div className="flex-shrink-0 w-2 h-2 bg-green-600 rounded-full mt-2 mr-3"></div>
                       <div>
-                        <p className="font-medium text-gray-800">Resolved</p>
-                        <p className="text-sm text-gray-600">{formatDate(complaint.resolvedAt)}</p>
+                        <p className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Resolved</p>
+                        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{formatDate(complaint.resolvedAt)}</p>
                       </div>
                     </div>
                   )}
@@ -437,18 +445,18 @@ For inquiries, contact: support@safedesk.com
             </div>
 
             {/* Next Steps */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="font-bold text-lg mb-4">Next Steps</h3>
+            <div className={`rounded-xl shadow-lg p-6 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+              <h3 className={`font-bold text-lg mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Next Steps</h3>
               <ul className="space-y-3">
                 {complaint.status === 'pending' && (
                   <>
                     <li className="flex items-start">
                       <span className="text-indigo-600 mr-2">•</span>
-                      <span className="text-gray-700">Your complaint is being reviewed by our team</span>
+                      <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Your complaint is being reviewed by our team</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-indigo-600 mr-2">•</span>
-                      <span className="text-gray-700">Expected review time: 24-48 hours</span>
+                      <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Expected review time: 24-48 hours</span>
                     </li>
                   </>
                 )}
@@ -456,17 +464,17 @@ For inquiries, contact: support@safedesk.com
                   <>
                     <li className="flex items-start">
                       <span className="text-indigo-600 mr-2">•</span>
-                      <span className="text-gray-700">You can now access legal support services</span>
+                      <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>You can now access legal support services</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-indigo-600 mr-2">•</span>
-                      <span className="text-gray-700">Connect with verified lawyers for guidance</span>
+                      <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Connect with verified lawyers for guidance</span>
                     </li>
                   </>
                 )}
                 <li className="flex items-start">
                   <span className="text-indigo-600 mr-2">•</span>
-                  <span className="text-gray-700">Keep your Anonymous ID safe for future reference</span>
+                  <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Keep your Anonymous ID safe for future reference</span>
                 </li>
               </ul>
             </div>
