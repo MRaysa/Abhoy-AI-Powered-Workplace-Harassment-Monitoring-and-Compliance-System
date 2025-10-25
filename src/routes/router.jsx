@@ -9,6 +9,7 @@ import PublicForum from "../pages/Employee/PublicForum";
 import AnonymousComplaint from "../pages/Employee/AnonymousComplaint";
 import TrackComplaint from "../pages/Employee/TrackComplaint";
 import Chat from "../pages/Common/Chat";
+import LawyersDirectory from "../components/LawyersDirectory";
 import employeeRoutes from "./EmployeeRoutes";
 import adminRoutes from "./AdminRoutes";
 import PrivateRoute from "./PrivateRoute";
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             <Chat />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "lawyers",
+        element: <LawyersDirectory />,
       },
       
     ],
