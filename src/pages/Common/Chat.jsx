@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import { AuthContext } from '../../contexts/AuthContext';
 import { FaPaperPlane, FaUser, FaRobot, FaGavel, FaShieldAlt, FaTimes, FaCalendar, FaClock, FaEnvelope, FaPhone, FaComment } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://abhoy-server.vercel.app/api';
 
 const Chat = () => {
+  const navigate = useNavigate();
   const { isDark } = useTheme();
-  const { user, getToken } = useContext(AuthContext);
+  const { user, getToken, logout } = useContext(AuthContext);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState(null);
@@ -46,15 +48,56 @@ const Chat = () => {
     try {
       setLoading(true);
       const token = getToken();
-      
+
+      // Check if token exists
+      if (!token) {
+        console.error('No authentication token found');
+        Swal.fire({
+          icon: 'error',
+          title: 'Authentication Error',
+          text: 'You need to sign in to use the AI assistant. Please sign in and try again.',
+          confirmButtonText: 'Sign In',
+          showCancelButton: true,
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/signin');
+          }
+        });
+        return;
+      }
+
       const response = await fetch(`${API_URL}/chat/session/start`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
 
+      // Check if response is ok before parsing
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        console.error('Chat API Error:', response.status, errorData);
+
+        if (response.status === 401) {
+          // Token expired or invalid
+          Swal.fire({
+            icon: 'error',
+            title: 'Session Expired',
+            text: 'Your session has expired. Please sign in again.',
+            confirmButtonText: 'Sign In'
+          }).then(() => {
+            logout(); // Clear invalid token
+            navigate('/signin');
+          });
+          return;
+        }
+
+        throw new Error(errorData.message || `Server error: ${response.status}`);
+      }
+
       const data = await response.json();
-      
+
       if (data.success) {
         setSessionId(data.data._id);
         setMessages(data.data.messages || []);
@@ -64,17 +107,19 @@ const Chat = () => {
         if (data.data.recommendedLawyer) {
           setRecommendedLawyer(data.data.recommendedLawyer);
         }
+      } else {
+        throw new Error(data.message || 'Failed to start chat session');
       }
     } catch (error) {
       console.error('Failed to start chat:', error);
       Swal.fire({
         icon: 'error',
         title: 'Connection Error',
-        text: 'Failed to connect to AI assistant',
+        text: error.message || 'Failed to connect to AI assistant. Please try again later.',
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000
+        timer: 5000
       });
     } finally {
       setLoading(false);

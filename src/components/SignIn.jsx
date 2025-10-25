@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import { userAPI } from "../services/api";
 import {
   FaGoogle,
   FaFacebook,
@@ -73,17 +74,10 @@ const SignIn = () => {
       };
 
       // Update last sign-in time in database
-      const updateResponse = await fetch("http://localhost:3000/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signInInfo),
-      });
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        throw new Error(errorData.error || "Failed to update sign-in time");
+      try {
+        await userAPI.updateSignIn(signInInfo);
+      } catch (error) {
+        throw new Error(error.message || "Failed to update sign-in time");
       }
 
       // Show success message
@@ -125,7 +119,7 @@ const SignIn = () => {
       const user = result.user;
 
       // Update database for Google sign-in
-      const updateResponse = await fetch("http://localhost:3000/users", {
+      const updateResponse = await fetch("https://abhoy-server.vercel.app/users", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

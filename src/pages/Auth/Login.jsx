@@ -37,7 +37,7 @@ const SignIn = () => {
       const result = await signInUser(email, password);
       
       // Get user role from backend response
-      const response = await fetch('http://localhost:3000/api/auth/verify-firebase', {
+      const response = await fetch('https://abhoy-server.vercel.app/api/auth/verify-firebase', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const SignIn = () => {
       const result = await googleSignIn();
       
       // Get user role from backend response
-      const response = await fetch('http://localhost:3000/api/auth/verify-firebase', {
+      const response = await fetch('https://abhoy-server.vercel.app/api/auth/verify-firebase', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -413,7 +413,7 @@ cd server-site
 npm start
 
 # Verify MongoDB is running
-# Check connection at http://localhost:3000/api/complaints
+# Check connection at https://abhoy-server.vercel.app/api/complaints
 ```
 
 ### Issue: "Complaint not appearing in forum"
